@@ -21,7 +21,6 @@ export class Context {
         ohlc4: [],
     };
     public cache: any = {};
-    public useTACache = false;
 
     public NA: any = NaN;
 

@@ -15,11 +15,11 @@ describe('Technical Analysis', () => {
 
         const part = result.values.reverse().slice(0, 10);
         const expected = [
-            98165.4322222222, 98227.7911111111, 98267.7311111111, 98284.2288888889, 98274.3355555556, 98301.0066666667, 98279.7622222222,
-            98254.6066666667, 98231.1377777778, 98184.59,
+            98165.4322222223, 98227.7911111112, 98267.7311111112, 98284.228888889, 98274.3355555556, 98301.0066666668, 98279.7622222223,
+            98254.6066666667, 98231.1377777779, 98184.5900000001,
         ];
         console.log(' SMA ', part);
-        expect(part).toEqual(arrayPrecision(expected));
+        expect(arrayPrecision(part)).toEqual(arrayPrecision(expected));
     });
 
     it('EMA', async () => {

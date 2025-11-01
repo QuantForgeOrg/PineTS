@@ -28,48 +28,150 @@ export class TechnicalAnalysis {
         //return [source];
     }
 
-    ema(source, _period) {
+    ema(source, _period, _cacheId?) {
         const period = Array.isArray(_period) ? _period[0] : _period;
-        const result = ema(source.slice(0).reverse(), period);
+        const cacheId = _cacheId || 'ema_default';
 
-        const idx = this.context.idx;
-        return this.context.precision(result[idx]);
+        // Initialize cache if it doesn't exist
+        if (!this.context.cache[cacheId]) {
+            this.context.cache[cacheId] = { initialized: false };
+        }
+
+        const cache = this.context.cache[cacheId];
+        const currentIdx = this.context.idx;
+        const sourceLength = source.length;
+
+        // Incremental computation: only when we have valid previous EMA and moving forward by 1 bar
+        if (cache.initialized && cache.lastIdx === currentIdx - 1 && sourceLength === cache.lastSourceLength + 1 && !isNaN(cache.lastEMA)) {
+            // New bar: compute only the new EMA value using the incremental formula
+            const alpha = 2 / (period + 1);
+            const newValue = source[0] * alpha + cache.lastEMA * (1 - alpha);
+
+            cache.lastEMA = newValue;
+            cache.lastIdx = currentIdx;
+            cache.lastSourceLength = sourceLength;
+
+            return this.context.precision(newValue);
+        }
+
+        // Full calculation: needed on first run or when cache is invalid
+        const result = ema(source.slice(0).reverse(), period);
+        // The result array has sourceLength elements [0...sourceLength-1]
+        // The last element (sourceLength-1) is the current bar's EMA
+        const value = result[sourceLength - 1];
+
+        // Update cache for next incremental calculation
+        cache.lastEMA = value;
+        cache.lastIdx = currentIdx;
+        cache.lastSourceLength = sourceLength;
+        cache.initialized = true;
+
+        return this.context.precision(value);
     }
 
     sma(source, _period, _cacheId?) {
         const period = Array.isArray(_period) ? _period[0] : _period;
-        const reversedSource = source.slice(0).reverse();
+        const cacheId = _cacheId || 'sma_default';
 
-        if (this.context.useTACache && _cacheId) {
-            // Initialize cache if it doesn't exist
-            if (!this.context.cache[_cacheId]) {
-                this.context.cache[_cacheId] = {};
-            }
-
-            const cacheObj = this.context.cache[_cacheId];
-
-            // Check if we can use cache
-            if (cacheObj) {
-                const result = sma_cache(reversedSource, period, cacheObj);
-                const idx = this.context.idx;
-                return this.context.precision(result[idx]);
-            }
+        // Initialize cache if it doesn't exist
+        if (!this.context.cache[cacheId]) {
+            this.context.cache[cacheId] = { initialized: false };
         }
 
-        // Calculate from scratch if no cache or cache conditions not met
-        const result = sma(reversedSource, period);
-        const idx = this.context.idx;
-        return this.context.precision(result[idx]);
+        const cache = this.context.cache[cacheId];
+        const currentIdx = this.context.idx;
+        const sourceLength = source.length;
+
+        // Incremental computation: only when we have valid state and moving forward by 1 bar
+        if (cache.initialized && cache.lastIdx === currentIdx - 1 && sourceLength === cache.lastSourceLength + 1) {
+            // New bar: update rolling sum
+            const newValue = source[0];
+            const oldValue = sourceLength > period ? source[period] : 0;
+
+            cache.rollingSum = cache.rollingSum - oldValue + newValue;
+            const smaValue = cache.rollingSum / period;
+
+            cache.lastSMA = smaValue;
+            cache.lastIdx = currentIdx;
+            cache.lastSourceLength = sourceLength;
+
+            return this.context.precision(smaValue);
+        }
+
+        // Full calculation: needed on first run or when cache is invalid
+        const result = sma(source.slice(0).reverse(), period);
+        // The result array has sourceLength elements [0...sourceLength-1]
+        // The last element (sourceLength-1) is the current bar's SMA
+        const value = result[sourceLength - 1];
+
+        // Calculate rolling sum for cache
+        let rollingSum = 0;
+        for (let i = 0; i < Math.min(period, sourceLength); i++) {
+            rollingSum += source[i] || 0;
+        }
+
+        // Update cache for next incremental calculation
+        cache.rollingSum = rollingSum;
+        cache.lastSMA = value;
+        cache.lastIdx = currentIdx;
+        cache.lastSourceLength = sourceLength;
+        cache.initialized = true;
+
+        return this.context.precision(value);
     }
 
-    vwma(source, _period) {
+    vwma(source, _period, _cacheId?) {
         const period = Array.isArray(_period) ? _period[0] : _period;
+        const cacheId = _cacheId || 'vwma_default';
+
+        // Initialize cache if it doesn't exist
+        if (!this.context.cache[cacheId]) {
+            this.context.cache[cacheId] = { initialized: false };
+        }
+
+        const cache = this.context.cache[cacheId];
+        const currentIdx = this.context.idx;
+        const sourceLength = source.length;
         const volume = this.context.data.volume;
 
+        // Incremental computation: only when we have valid state and moving forward by 1 bar
+        if (cache.initialized && cache.lastIdx === currentIdx - 1 && sourceLength === cache.lastSourceLength + 1) {
+            const newValue = source[0];
+            const newVolume = volume[0];
+            const oldValue = sourceLength > period ? source[period] : 0;
+            const oldVolume = sourceLength > period ? volume[period] : 0;
+
+            cache.rollingVolumeSum = cache.rollingVolumeSum - oldVolume + newVolume;
+            cache.rollingVolumePriceSum = cache.rollingVolumePriceSum - oldValue * oldVolume + newValue * newVolume;
+
+            const vwmaValue = cache.rollingVolumeSum !== 0 ? cache.rollingVolumePriceSum / cache.rollingVolumeSum : 0;
+
+            cache.lastIdx = currentIdx;
+            cache.lastSourceLength = sourceLength;
+
+            return this.context.precision(vwmaValue);
+        }
+
+        // Full calculation: needed on first run or when cache is invalid
         const result = vwma(source.slice(0).reverse(), volume.slice(0).reverse(), period);
-        //return result.reverse();
-        const idx = this.context.idx;
-        return this.context.precision(result[idx]);
+        const value = result[sourceLength - 1];
+
+        // Calculate rolling sums for cache
+        let rollingVolumeSum = 0;
+        let rollingVolumePriceSum = 0;
+        for (let i = 0; i < Math.min(period, sourceLength); i++) {
+            rollingVolumeSum += volume[i];
+            rollingVolumePriceSum += source[i] * volume[i];
+        }
+
+        // Update cache for next incremental calculation
+        cache.rollingVolumeSum = rollingVolumeSum;
+        cache.rollingVolumePriceSum = rollingVolumePriceSum;
+        cache.lastIdx = currentIdx;
+        cache.lastSourceLength = sourceLength;
+        cache.initialized = true;
+
+        return this.context.precision(value);
     }
 
     wma(source, _period) {
@@ -88,12 +190,44 @@ export class TechnicalAnalysis {
         return this.context.precision(result[idx]);
     }
 
-    rma(source, _period) {
+    rma(source, _period, _cacheId?) {
         const period = Array.isArray(_period) ? _period[0] : _period;
+        const cacheId = _cacheId || 'rma_default';
+
+        // Initialize cache if it doesn't exist
+        if (!this.context.cache[cacheId]) {
+            this.context.cache[cacheId] = { initialized: false };
+        }
+
+        const cache = this.context.cache[cacheId];
+        const currentIdx = this.context.idx;
+        const sourceLength = source.length;
+
+        // Incremental computation: only when we have valid previous RMA and moving forward by 1 bar
+        if (cache.initialized && cache.lastIdx === currentIdx - 1 && sourceLength === cache.lastSourceLength + 1 && !isNaN(cache.lastRMA)) {
+            // New bar: compute only the new RMA value using the incremental formula
+            // RMA formula: (previous RMA * (period-1) + current value) / period
+            const alpha = 1 / period;
+            const newValue = source[0] * alpha + cache.lastRMA * (1 - alpha);
+
+            cache.lastRMA = newValue;
+            cache.lastIdx = currentIdx;
+            cache.lastSourceLength = sourceLength;
+
+            return this.context.precision(newValue);
+        }
+
+        // Full calculation: needed on first run or when cache is invalid
         const result = rma(source.slice(0).reverse(), period);
-        //return result.reverse();
-        const idx = this.context.idx;
-        return this.context.precision(result[idx]);
+        const value = result[sourceLength - 1];
+
+        // Update cache for next incremental calculation
+        cache.lastRMA = value;
+        cache.lastIdx = currentIdx;
+        cache.lastSourceLength = sourceLength;
+        cache.initialized = true;
+
+        return this.context.precision(value);
     }
 
     change(source, _length = 1) {
@@ -104,24 +238,132 @@ export class TechnicalAnalysis {
         return this.context.precision(result[idx]);
     }
 
-    rsi(source, _period) {
+    rsi(source, _period, _cacheId?) {
         const period = Array.isArray(_period) ? _period[0] : _period;
+        const cacheId = _cacheId || 'rsi_default';
+
+        // Initialize cache if it doesn't exist
+        if (!this.context.cache[cacheId]) {
+            this.context.cache[cacheId] = { initialized: false };
+        }
+
+        const cache = this.context.cache[cacheId];
+        const currentIdx = this.context.idx;
+        const sourceLength = source.length;
+
+        // Incremental computation: only when we have valid state and moving forward by 1 bar
+        if (cache.initialized && cache.lastIdx === currentIdx - 1 && sourceLength === cache.lastSourceLength + 1) {
+            // Calculate current change
+            const currentValue = source[0];
+            const previousValue = source[1];
+            const diff = currentValue - previousValue;
+
+            // Update average gain and loss using RMA formula
+            const gain = diff > 0 ? diff : 0;
+            const loss = diff < 0 ? -diff : 0;
+
+            cache.avgGain = (cache.avgGain * (period - 1) + gain) / period;
+            cache.avgLoss = (cache.avgLoss * (period - 1) + loss) / period;
+
+            // Calculate RSI
+            const rs = cache.avgLoss === 0 ? 100 : cache.avgGain / cache.avgLoss;
+            const rsiValue = 100 - 100 / (1 + rs);
+
+            cache.lastIdx = currentIdx;
+            cache.lastSourceLength = sourceLength;
+
+            return this.context.precision(rsiValue);
+        }
+
+        // Full calculation: needed on first run or when cache is invalid
         const result = rsi(source.slice(0).reverse(), period);
-        //result.reverse();
-        //return result.reverse();
-        const idx = this.context.idx;
-        return this.context.precision(result[idx]);
+        const value = result[sourceLength - 1];
+
+        // Calculate and store average gain/loss for next incremental calculation
+        const gains = [];
+        const losses = [];
+        const reversed = source.slice(0).reverse();
+
+        for (let i = 1; i <= period && i < reversed.length; i++) {
+            const diff = reversed[sourceLength - i] - reversed[sourceLength - i - 1];
+            gains.push(diff > 0 ? diff : 0);
+            losses.push(diff < 0 ? -diff : 0);
+        }
+
+        let avgGain = gains.reduce((a, b) => a + b, 0) / period;
+        let avgLoss = losses.reduce((a, b) => a + b, 0) / period;
+
+        // Apply RMA smoothing for values after the first period
+        for (let i = period + 1; i < sourceLength; i++) {
+            const diff = reversed[i] - reversed[i - 1];
+            const gain = diff > 0 ? diff : 0;
+            const loss = diff < 0 ? -diff : 0;
+            avgGain = (avgGain * (period - 1) + gain) / period;
+            avgLoss = (avgLoss * (period - 1) + loss) / period;
+        }
+
+        // Update cache for next incremental calculation
+        cache.avgGain = avgGain;
+        cache.avgLoss = avgLoss;
+        cache.lastIdx = currentIdx;
+        cache.lastSourceLength = sourceLength;
+        cache.initialized = true;
+
+        return this.context.precision(value);
     }
 
-    atr(_period) {
+    atr(_period, _cacheId?) {
         const period = Array.isArray(_period) ? _period[0] : _period;
-        const high = this.context.data.high.slice().reverse();
-        const low = this.context.data.low.slice().reverse();
-        const close = this.context.data.close.slice().reverse();
-        const result = atr(high, low, close, period);
-        //return result.reverse();
-        const idx = this.context.idx;
-        return this.context.precision(result[idx]);
+        const cacheId = _cacheId || 'atr_default';
+
+        // Initialize cache if it doesn't exist
+        if (!this.context.cache[cacheId]) {
+            this.context.cache[cacheId] = { initialized: false };
+        }
+
+        const cache = this.context.cache[cacheId];
+        const currentIdx = this.context.idx;
+        const high = this.context.data.high;
+        const low = this.context.data.low;
+        const close = this.context.data.close;
+        const sourceLength = high.length;
+
+        // Incremental computation: only when we have valid state and moving forward by 1 bar
+        if (cache.initialized && cache.lastIdx === currentIdx - 1 && sourceLength === cache.lastSourceLength + 1 && !isNaN(cache.lastATR)) {
+            // Calculate current TR
+            const currentHigh = high[0];
+            const currentLow = low[0];
+            const previousClose = close[1];
+
+            const hl = currentHigh - currentLow;
+            const hc = Math.abs(currentHigh - previousClose);
+            const lc = Math.abs(currentLow - previousClose);
+            const tr = Math.max(hl, hc, lc);
+
+            // Update ATR using RMA formula: (previous ATR * (period-1) + current TR) / period
+            const atrValue = (cache.lastATR * (period - 1) + tr) / period;
+
+            cache.lastATR = atrValue;
+            cache.lastIdx = currentIdx;
+            cache.lastSourceLength = sourceLength;
+
+            return this.context.precision(atrValue);
+        }
+
+        // Full calculation: needed on first run or when cache is invalid
+        const highReversed = high.slice().reverse();
+        const lowReversed = low.slice().reverse();
+        const closeReversed = close.slice().reverse();
+        const result = atr(highReversed, lowReversed, closeReversed, period);
+        const value = result[sourceLength - 1];
+
+        // Update cache for next incremental calculation
+        cache.lastATR = value;
+        cache.lastIdx = currentIdx;
+        cache.lastSourceLength = sourceLength;
+        cache.initialized = true;
+
+        return this.context.precision(value);
     }
 
     mom(source, _length) {
@@ -140,12 +382,59 @@ export class TechnicalAnalysis {
         return this.context.precision(result[idx]);
     }
 
-    dev(source, _length) {
+    dev(source, _length, _cacheId?) {
         const length = Array.isArray(_length) ? _length[0] : _length;
+        const cacheId = _cacheId || 'dev_default';
+
+        // Initialize cache if it doesn't exist
+        if (!this.context.cache[cacheId]) {
+            this.context.cache[cacheId] = { initialized: false };
+        }
+
+        const cache = this.context.cache[cacheId];
+        const currentIdx = this.context.idx;
+        const sourceLength = source.length;
+
+        // Incremental computation: only when we have valid state and moving forward by 1 bar
+        if (cache.initialized && cache.lastIdx === currentIdx - 1 && sourceLength === cache.lastSourceLength + 1) {
+            // Update rolling sum (for SMA calculation)
+            const newValue = source[0];
+            const oldValue = sourceLength > length ? source[length] : 0;
+
+            cache.rollingSum = cache.rollingSum - oldValue + newValue;
+            const sma = cache.rollingSum / length;
+
+            // Calculate sum of absolute deviations from SMA
+            let sumDeviation = 0;
+            for (let i = 0; i < Math.min(length, sourceLength); i++) {
+                sumDeviation += Math.abs(source[i] - sma);
+            }
+
+            const devValue = sumDeviation / length;
+
+            cache.lastIdx = currentIdx;
+            cache.lastSourceLength = sourceLength;
+
+            return this.context.precision(devValue);
+        }
+
+        // Full calculation: needed on first run or when cache is invalid
         const result = dev(source.slice(0).reverse(), length);
-        //return result.reverse();
-        const idx = this.context.idx;
-        return this.context.precision(result[idx]);
+        const value = result[sourceLength - 1];
+
+        // Calculate rolling sum for cache
+        let rollingSum = 0;
+        for (let i = 0; i < Math.min(length, sourceLength); i++) {
+            rollingSum += source[i] || 0;
+        }
+
+        // Update cache for next incremental calculation
+        cache.rollingSum = rollingSum;
+        cache.lastIdx = currentIdx;
+        cache.lastSourceLength = sourceLength;
+        cache.initialized = true;
+
+        return this.context.precision(value);
     }
 
     variance(source, _length) {
@@ -156,20 +445,120 @@ export class TechnicalAnalysis {
         return this.context.precision(result[idx]);
     }
 
-    highest(source, _length) {
+    highest(source, _length, _cacheId?) {
         const length = Array.isArray(_length) ? _length[0] : _length;
+        const cacheId = _cacheId || 'highest_default';
+
+        // Initialize cache if it doesn't exist
+        if (!this.context.cache[cacheId]) {
+            this.context.cache[cacheId] = { initialized: false, window: [] };
+        }
+
+        const cache = this.context.cache[cacheId];
+        const currentIdx = this.context.idx;
+        const sourceLength = source.length;
+
+        // Incremental computation: only when we have valid state and moving forward by 1 bar
+        if (cache.initialized && cache.lastIdx === currentIdx - 1 && sourceLength === cache.lastSourceLength + 1) {
+            const newValue = source[0];
+
+            // Add new value to the front of window
+            cache.window.unshift(newValue);
+
+            // Remove old value if window exceeds length
+            if (cache.window.length > length) {
+                cache.window.pop();
+            }
+
+            // Find maximum in window
+            let max = -Infinity;
+            for (let i = 0; i < cache.window.length; i++) {
+                const val = cache.window[i];
+                if (!isNaN(val) && val !== undefined) {
+                    max = Math.max(max, val);
+                }
+            }
+
+            cache.lastIdx = currentIdx;
+            cache.lastSourceLength = sourceLength;
+
+            return this.context.precision(max === -Infinity ? NaN : max);
+        }
+
+        // Full calculation: needed on first run or when cache is invalid
         const result = highest(source.slice(0).reverse(), length);
-        //return result.reverse();
-        const idx = this.context.idx;
-        return this.context.precision(result[idx]);
+        const value = result[sourceLength - 1];
+
+        // Build window for cache
+        cache.window = [];
+        for (let i = 0; i < Math.min(length, sourceLength); i++) {
+            cache.window.push(source[i]);
+        }
+
+        // Update cache for next incremental calculation
+        cache.lastIdx = currentIdx;
+        cache.lastSourceLength = sourceLength;
+        cache.initialized = true;
+
+        return this.context.precision(value);
     }
 
-    lowest(source, _length) {
+    lowest(source, _length, _cacheId?) {
         const length = Array.isArray(_length) ? _length[0] : _length;
+        const cacheId = _cacheId || 'lowest_default';
+
+        // Initialize cache if it doesn't exist
+        if (!this.context.cache[cacheId]) {
+            this.context.cache[cacheId] = { initialized: false, window: [] };
+        }
+
+        const cache = this.context.cache[cacheId];
+        const currentIdx = this.context.idx;
+        const sourceLength = source.length;
+
+        // Incremental computation: only when we have valid state and moving forward by 1 bar
+        if (cache.initialized && cache.lastIdx === currentIdx - 1 && sourceLength === cache.lastSourceLength + 1) {
+            const newValue = source[0];
+
+            // Add new value to the front of window
+            cache.window.unshift(newValue);
+
+            // Remove old value if window exceeds length
+            if (cache.window.length > length) {
+                cache.window.pop();
+            }
+
+            // Find minimum in window
+            let min = Infinity;
+            for (let i = 0; i < cache.window.length; i++) {
+                const val = cache.window[i];
+                if (!isNaN(val) && val !== undefined) {
+                    min = Math.min(min, val);
+                }
+            }
+
+            cache.lastIdx = currentIdx;
+            cache.lastSourceLength = sourceLength;
+
+            return this.context.precision(min === Infinity ? NaN : min);
+        }
+
+        // Full calculation: needed on first run or when cache is invalid
         const result = lowest(source.slice(0).reverse(), length);
-        //return result.reverse();
-        const idx = this.context.idx;
-        return this.context.precision(result[idx]);
+        const value = result[sourceLength - 1];
+
+        // Build window for cache
+        cache.window = [];
+        for (let i = 0; i < Math.min(length, sourceLength); i++) {
+            cache.window.push(source[i]);
+        }
+
+        // Update cache for next incremental calculation
+        cache.lastIdx = currentIdx;
+        cache.lastSourceLength = sourceLength;
+        cache.initialized = true;
+
+        return this.context.precision(value);
     }
 
     median(source, _length) {
@@ -180,22 +569,78 @@ export class TechnicalAnalysis {
         return this.context.precision(result[idx]);
     }
 
-    stdev(source, _length, _bias = true) {
+    stdev(source, _length, _bias = true, _cacheId?) {
         const length = Array.isArray(_length) ? _length[0] : _length;
         const bias = Array.isArray(_bias) ? _bias[0] : _bias;
+        const cacheId = _cacheId || 'stdev_default';
+
+        // Initialize cache if it doesn't exist
+        if (!this.context.cache[cacheId]) {
+            this.context.cache[cacheId] = { initialized: false };
+        }
+
+        const cache = this.context.cache[cacheId];
+        const currentIdx = this.context.idx;
+        const sourceLength = source.length;
+
+        // Incremental computation: only when we have valid state and moving forward by 1 bar
+        if (cache.initialized && cache.lastIdx === currentIdx - 1 && sourceLength === cache.lastSourceLength + 1) {
+            // Update rolling sum and sum of squares
+            const newValue = source[0];
+            const oldValue = sourceLength > length ? source[length] : 0;
+
+            cache.rollingSum = cache.rollingSum - oldValue + newValue;
+            cache.rollingSumSquares = cache.rollingSumSquares - oldValue * oldValue + newValue * newValue;
+
+            // Calculate mean and variance
+            const mean = cache.rollingSum / length;
+            const variance = cache.rollingSumSquares / length - mean * mean;
+
+            // Calculate standard deviation
+            const divisor = bias ? length : length - 1;
+            const stdevValue = Math.sqrt((variance * length) / divisor);
+
+            cache.lastIdx = currentIdx;
+            cache.lastSourceLength = sourceLength;
+
+            return this.context.precision(stdevValue);
+        }
+
+        // Full calculation: needed on first run or when cache is invalid
         const result = stdev(source.slice(0).reverse(), length, bias);
-        //return result.reverse();
-        const idx = this.context.idx;
-        return this.context.precision(result[idx]);
+        const value = result[sourceLength - 1];
+
+        // Calculate rolling sum and sum of squares for cache
+        let rollingSum = 0;
+        let rollingSumSquares = 0;
+        for (let i = 0; i < Math.min(length, sourceLength); i++) {
+            const val = source[i] || 0;
+            rollingSum += val;
+            rollingSumSquares += val * val;
+        }
+
+        // Update cache for next incremental calculation
+        cache.rollingSum = rollingSum;
+        cache.rollingSumSquares = rollingSumSquares;
+        cache.lastIdx = currentIdx;
+        cache.lastSourceLength = sourceLength;
+        cache.initialized = true;
+
+        return this.context.precision(value);
     }
 
-    linreg(source, _length, _offset) {
+    linreg(source, _length, _offset, _cacheId?) {
         const length = Array.isArray(_length) ? _length[0] : _length;
         const offset = Array.isArray(_offset) ? _offset[0] : _offset;
+
+        // LINREG is complex for true incremental calculation with sliding windows
+        // The X coordinates change as the window slides, requiring full recalculation
+        // Since it's not heavily used, we skip caching for now
         const result = linreg(source.slice(0).reverse(), length, offset);
-        //return result.reverse();
-        const idx = this.context.idx;
-        return this.context.precision(result[idx]);
+        const sourceLength = source.length;
+        const value = result[sourceLength - 1];
+
+        return this.context.precision(value);
     }
 
     supertrend(_factor, _atrPeriod) {
@@ -376,53 +821,6 @@ function rma(source: number[], period: number): number[] {
         const currentValue = source[i] || 0; // Handle NaN values
         result[i] = currentValue * alpha + result[i - 1] * (1 - alpha);
     }
-
-    return result;
-}
-
-function sma_cache(
-    source: number[],
-    period: number,
-    cacheObj: {
-        previousSum?: number;
-        lastProcessedIndex?: number;
-        previousResult?: number[];
-    }
-) {
-    const result = cacheObj.previousResult || new Array(source.length).fill(NaN);
-    const lastProcessedIndex = cacheObj.lastProcessedIndex || -1;
-    let previousSum = cacheObj.previousSum || 0;
-
-    if (lastProcessedIndex === -1 || source.length !== lastProcessedIndex + 1) {
-        // Initialize cache or handle reset/different length source
-        previousSum = 0;
-        for (let i = 0; i < period; i++) {
-            previousSum += source[i] || 0;
-        }
-        result[period - 1] = previousSum / period;
-
-        // Fill initial values with NaN for cache initialization as well
-        for (let i = 0; i < period - 1; i++) {
-            result[i] = NaN;
-        }
-
-        for (let i = period; i < source.length; i++) {
-            previousSum = previousSum - (source[i - period] || 0) + (source[i] || 0);
-            result[i] = previousSum / period;
-        }
-    } else if (source.length === lastProcessedIndex + 2) {
-        // Optimized calculation for new element
-        const newIndex = source.length - 1;
-        previousSum = previousSum - (source[newIndex - period] || 0) + (source[newIndex] || 0);
-        result[newIndex] = previousSum / period;
-    } else {
-        // Fallback to full calculation if cache is inconsistent or source length changed unexpectedly
-        return sma(source, period);
-    }
-
-    cacheObj.previousSum = previousSum;
-    cacheObj.lastProcessedIndex = source.length - 1;
-    cacheObj.previousResult = result;
 
     return result;
 }
