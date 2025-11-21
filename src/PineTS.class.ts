@@ -373,19 +373,8 @@ export class PineTS {
             }
         }
 
-        // Also remove from context.data arrays
-        context.data.close.shift();
-        context.data.open.shift();
-        context.data.high.shift();
-        context.data.low.shift();
-        context.data.volume.shift();
-        context.data.hl2.shift();
-        context.data.hlc3.shift();
-        context.data.ohlc4.shift();
-        context.data.openTime.shift();
-        if (context.data.closeTime) {
-            context.data.closeTime.shift();
-        }
+        // No need to shift context.data arrays - they're forward-indexed
+        // The arrays point directly to PineTS arrays which are managed separately
     }
 
     /**
@@ -404,16 +393,17 @@ export class PineTS {
         });
 
         context.pineTSCode = pineTSCode;
-        context.data.close = [];
-        context.data.open = [];
-        context.data.high = [];
-        context.data.low = [];
-        context.data.volume = [];
-        context.data.hl2 = [];
-        context.data.hlc3 = [];
-        context.data.ohlc4 = [];
-        context.data.openTime = [];
-        context.data.closeTime = [];
+        // Point context.data arrays directly to PineTS arrays (forward-indexed, no unshift needed)
+        context.data.close = this.close;
+        context.data.open = this.open;
+        context.data.high = this.high;
+        context.data.low = this.low;
+        context.data.volume = this.volume;
+        context.data.hl2 = this.hl2;
+        context.data.hlc3 = this.hlc3;
+        context.data.ohlc4 = this.ohlc4;
+        context.data.openTime = this.openTime;
+        context.data.closeTime = this.closeTime;
 
         return context;
     }
@@ -437,15 +427,8 @@ export class PineTS {
         for (let i = startIdx; i < endIdx; i++) {
             context.idx = i;
 
-            context.data.close.unshift(this.close[i]);
-            context.data.open.unshift(this.open[i]);
-            context.data.high.unshift(this.high[i]);
-            context.data.low.unshift(this.low[i]);
-            context.data.volume.unshift(this.volume[i]);
-            context.data.hl2.unshift(this.hl2[i]);
-            context.data.hlc3.unshift(this.hlc3[i]);
-            context.data.ohlc4.unshift(this.ohlc4[i]);
-            context.data.openTime.unshift(this.openTime[i]);
+            // No need to unshift built-in series - they're forward-indexed via context.idx
+            // context.data arrays now point directly to this.close, this.open, etc.
 
             const result = await transpiledFn(context);
 
@@ -470,7 +453,7 @@ export class PineTS {
                 context.result.push(result);
             }
 
-            //shift context
+            //shift context for user variables (still using unshift pattern)
             for (let ctxVarName of contextVarNames) {
                 for (let key in context[ctxVarName]) {
                     if (Array.isArray(context[ctxVarName][key])) {

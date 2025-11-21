@@ -11,6 +11,7 @@ export class ScopeManager {
     private varKinds: Map<string, string> = new Map();
     private loopVars: Set<string> = new Set();
     private loopVarNames: Map<string, string> = new Map(); // Map original names to transformed names
+    private builtinSeriesVars: Set<string> = new Set(); // Track variables that are destructured from context.data
     private paramIdCounter: number = 0;
     private cacheIdCounter: number = 0;
     private tempVarCounter: number = 0;
@@ -108,6 +109,14 @@ export class ScopeManager {
 
     isLoopVariable(name: string): boolean {
         return this.loopVars.has(name);
+    }
+
+    addBuiltinSeriesVar(name: string): void {
+        this.builtinSeriesVars.add(name);
+    }
+
+    isBuiltinSeriesVar(name: string): boolean {
+        return this.builtinSeriesVars.has(name);
     }
 
     addVariable(name: string, kind: string): string {

@@ -2,11 +2,36 @@
 export class TechnicalAnalysis {
     constructor(private context: any) {}
 
+    /**
+     * Helper method to get the current value from a source array
+     * Handles both forward-indexed (built-in series) and backward-indexed (user variables) arrays
+     */
+    private getCurrentValue(source: any): number {
+        if (Array.isArray(source)) {
+            // For forward-indexed arrays (built-in series), use context.idx
+            // For backward-indexed arrays (user variables), use [0]
+            // We detect built-in series by checking if source is one of context.data arrays
+            const isBuiltinSeries =
+                source === this.context.data.close ||
+                source === this.context.data.open ||
+                source === this.context.data.high ||
+                source === this.context.data.low ||
+                source === this.context.data.volume ||
+                source === this.context.data.hl2 ||
+                source === this.context.data.hlc3 ||
+                source === this.context.data.ohlc4;
+
+            return isBuiltinSeries ? source[this.context.idx] : source[0];
+        }
+        return source;
+    }
+
     public get tr() {
+        const idx = this.context.idx;
         const val = this.context.math.max(
-            this.context.data.high[0] - this.context.data.low[0],
-            this.context.math.abs(this.context.data.high[0] - this.context.data.close[1]),
-            this.context.math.abs(this.context.data.low[0] - this.context.data.close[1])
+            this.context.data.high[idx] - this.context.data.low[idx],
+            this.context.math.abs(this.context.data.high[idx] - this.context.data.close[idx - 1]),
+            this.context.math.abs(this.context.data.low[idx] - this.context.data.close[idx - 1])
         );
         return val;
     }
@@ -14,6 +39,24 @@ export class TechnicalAnalysis {
     param(source, index, name?: string) {
         if (!this.context.params[name]) this.context.params[name] = [];
         if (Array.isArray(source)) {
+            // Check if this is a built-in series (forward-indexed)
+            const isBuiltinSeries =
+                source === this.context.data.close ||
+                source === this.context.data.open ||
+                source === this.context.data.high ||
+                source === this.context.data.low ||
+                source === this.context.data.volume ||
+                source === this.context.data.hl2 ||
+                source === this.context.data.hlc3 ||
+                source === this.context.data.ohlc4;
+
+            if (isBuiltinSeries) {
+                // For built-in series, return the array directly without slicing
+                // The TA functions will use getCurrentValue() to access the right index
+                return source;
+            }
+
+            // For user variables (backward-indexed), use the old behavior
             if (index) {
                 this.context.params[name] = source.slice(index);
                 this.context.params[name].length = source.length; //ensure length is correct
@@ -40,7 +83,7 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0];
+        const currentValue = this.getCurrentValue(source);
 
         if (state.initCount < period) {
             // Accumulate for SMA initialization
@@ -74,7 +117,7 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0] || 0;
+        const currentValue = this.getCurrentValue(source) || 0;
 
         // Add current value to window
         state.window.unshift(currentValue);
@@ -107,8 +150,8 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0];
-        const currentVolume = this.context.data.volume[0];
+        const currentValue = this.getCurrentValue(source);
+        const currentVolume = this.context.data.volume[this.context.idx];
 
         state.window.unshift(currentValue);
         state.volumeWindow.unshift(currentVolume);
@@ -145,7 +188,7 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0];
+        const currentValue = this.getCurrentValue(source);
 
         state.window.unshift(currentValue);
 
@@ -238,7 +281,7 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0] || 0;
+        const currentValue = this.getCurrentValue(source) || 0;
 
         if (state.initCount < period) {
             // Accumulate for SMA initialization
@@ -272,7 +315,7 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0];
+        const currentValue = this.getCurrentValue(source);
 
         state.window.unshift(currentValue);
 
@@ -306,7 +349,7 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0];
+        const currentValue = this.getCurrentValue(source);
 
         // Calculate gain/loss from previous value
         if (state.prevValue !== null) {
@@ -364,9 +407,10 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const high = this.context.data.high[0];
-        const low = this.context.data.low[0];
-        const close = this.context.data.close[0];
+        const idx = this.context.idx;
+        const high = this.context.data.high[idx];
+        const low = this.context.data.low[idx];
+        const close = this.context.data.close[idx];
 
         // Calculate True Range
         let tr;
@@ -419,7 +463,7 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0];
+        const currentValue = this.getCurrentValue(source);
 
         state.window.unshift(currentValue);
 
@@ -448,7 +492,7 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0] || 0;
+        const currentValue = this.getCurrentValue(source) || 0;
 
         state.window.unshift(currentValue);
         state.sum += currentValue;
@@ -484,7 +528,7 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0];
+        const currentValue = this.getCurrentValue(source);
 
         state.window.unshift(currentValue);
 
@@ -521,7 +565,7 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0];
+        const currentValue = this.getCurrentValue(source);
 
         state.window.unshift(currentValue);
 
@@ -549,7 +593,7 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0];
+        const currentValue = this.getCurrentValue(source);
 
         state.window.unshift(currentValue);
 
@@ -578,7 +622,7 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0];
+        const currentValue = this.getCurrentValue(source);
 
         state.window.unshift(currentValue);
 
@@ -610,7 +654,7 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0];
+        const currentValue = this.getCurrentValue(source);
 
         state.window.unshift(currentValue);
         state.sum += currentValue;
@@ -649,7 +693,7 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0];
+        const currentValue = this.getCurrentValue(source);
 
         state.window.unshift(currentValue);
 
@@ -710,9 +754,10 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const high = this.context.data.high[0];
-        const low = this.context.data.low[0];
-        const close = this.context.data.close[0];
+        const idx = this.context.idx;
+        const high = this.context.data.high[idx];
+        const low = this.context.data.low[idx];
+        const close = this.context.data.close[idx];
 
         // Get ATR value (already optimized) - use derived call ID
         const atrValue = this.atr(atrPeriod, _callId ? `${_callId}_atr` : undefined);
@@ -727,13 +772,13 @@ export class TechnicalAnalysis {
 
         // Adjust bands based on previous values
         if (state.prevUpperBand !== null) {
-            if (upperBand < state.prevUpperBand || this.context.data.close[1] > state.prevUpperBand) {
+            if (upperBand < state.prevUpperBand || this.context.data.close[idx - 1] > state.prevUpperBand) {
                 upperBand = upperBand;
             } else {
                 upperBand = state.prevUpperBand;
             }
 
-            if (lowerBand > state.prevLowerBand || this.context.data.close[1] < state.prevLowerBand) {
+            if (lowerBand > state.prevLowerBand || this.context.data.close[idx - 1] < state.prevLowerBand) {
                 lowerBand = lowerBand;
             } else {
                 lowerBand = state.prevLowerBand;

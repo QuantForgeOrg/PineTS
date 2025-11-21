@@ -1,6 +1,25 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 export class Core {
+    private getCurrentValue(source: any): number {
+        if (Array.isArray(source)) {
+            const isBuiltinSeries =
+                source === this.context.data.close ||
+                source === this.context.data.open ||
+                source === this.context.data.high ||
+                source === this.context.data.low ||
+                source === this.context.data.volume ||
+                source === this.context.data.hl2 ||
+                source === this.context.data.hlc3 ||
+                source === this.context.data.ohlc4 ||
+                source === this.context.data.openTime ||
+                source === this.context.data.closeTime;
+
+            return isBuiltinSeries ? source[this.context.idx] : source[0];
+        }
+        return source;
+    }
+
     public color = {
         param: (source, index = 0) => {
             if (Array.isArray(source)) {
@@ -57,8 +76,8 @@ export class Core {
         }
 
         this.context.plots[title].data.push({
-            time: this.context.marketData[this.context.marketData.length - this.context.idx - 1].openTime,
-            value: series[0],
+            time: this.context.data.openTime[this.context.idx],
+            value: this.getCurrentValue(series),
             options: { ...this.extractPlotOptions(options), style: 'char' },
         });
     }
@@ -69,18 +88,19 @@ export class Core {
         }
 
         this.context.plots[title].data.push({
-            time: this.context.marketData[this.context.marketData.length - this.context.idx - 1].openTime,
-            value: series[0],
+            time: this.context.data.openTime[this.context.idx],
+            value: this.getCurrentValue(series),
             options: this.extractPlotOptions(options),
         });
     }
 
     na(series: any) {
-        return Array.isArray(series) ? isNaN(series[0]) : isNaN(series);
+        const val = this.getCurrentValue(series);
+        return isNaN(val);
     }
     nz(series: any, replacement: number = 0) {
-        const val = Array.isArray(series) ? series[0] : series;
-        const rep = Array.isArray(series) ? replacement[0] : replacement;
+        const val = this.getCurrentValue(series);
+        const rep = this.getCurrentValue(replacement);
         return isNaN(val) ? rep : val;
     }
 }

@@ -52,8 +52,9 @@ export class PineRequest {
             return _expression;
         }
 
-        const myOpenTime = this.context.data.openTime[0];
-        const myCloseTime = this.context.data.closeTime[0];
+        const idx = this.context.idx;
+        const myOpenTime = this.context.data.openTime[idx];
+        const myCloseTime = this.context.data.closeTime[idx];
 
         if (this.context.cache[_expression_name]) {
             const secContext = this.context.cache[_expression_name];

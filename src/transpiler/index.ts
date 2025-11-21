@@ -58,6 +58,13 @@ const UNDEFINED_ARG = {
     name: 'undefined',
 };
 
+// Built-in series that are forward-indexed (optimized)
+const BUILTIN_SERIES = ['close', 'open', 'high', 'low', 'volume', 'hl2', 'hlc3', 'ohlc4', 'openTime', 'closeTime'];
+
+function isBuiltinSeries(name: string): boolean {
+    return BUILTIN_SERIES.includes(name);
+}
+
 function transformArrayIndex(node: any, scopeManager: ScopeManager): void {
     //const isIfStatement = scopeManager.getCurrentScopeType() == 'if';
     //const isForStatement = scopeManager.getCurrentScopeType() == 'for';
@@ -106,6 +113,42 @@ function transformArrayIndex(node: any, scopeManager: ScopeManager): void {
 
     if (node.computed && node.object.type === 'Identifier') {
         if (scopeManager.isLoopVariable(node.object.name)) {
+            return;
+        }
+
+        // Check if this is a built-in series (forward-indexed optimization)
+        // This includes both direct built-in series AND variables destructured from context.data
+        if (isBuiltinSeries(node.object.name) || scopeManager.isBuiltinSeriesVar(node.object.name)) {
+            // Transform: close[1] -> close[$.idx - 1]
+            // Transform: close[0] -> close[$.idx]
+            const offset = node.property;
+
+            // Create $.idx
+            const idxAccess = {
+                type: 'MemberExpression',
+                object: {
+                    type: 'Identifier',
+                    name: CONTEXT_NAME,
+                },
+                property: {
+                    type: 'Identifier',
+                    name: 'idx',
+                },
+                computed: false,
+            };
+
+            // If offset is a literal 0, just use $.idx
+            if (offset.type === 'Literal' && offset.value === 0) {
+                node.property = idxAccess;
+            } else {
+                // Otherwise create: $.idx - offset
+                node.property = {
+                    type: 'BinaryExpression',
+                    operator: '-',
+                    left: idxAccess,
+                    right: offset,
+                };
+            }
             return;
         }
 
@@ -203,6 +246,15 @@ function transformVariableDeclaration(varNode: any, scopeManager: ScopeManager):
                 decl.init.object.object.name === CONTEXT_NAME ||
                 decl.init.object.object.name === 'context2');
 
+        // Check if this is destructuring from context.data (e.g., const { close } = context.data)
+        const isContextDataProperty =
+            decl.init &&
+            decl.init.type === 'MemberExpression' &&
+            decl.init.object?.object &&
+            (decl.init.object.object.name === 'context' || decl.init.object.object.name === CONTEXT_NAME) &&
+            decl.init.object.property &&
+            decl.init.object.property.name === 'data';
+
         // Check if this is an arrow function declaration
         const isArrowFunction = decl.init && decl.init.type === 'ArrowFunctionExpression';
 
@@ -219,6 +271,28 @@ function transformVariableDeclaration(varNode: any, scopeManager: ScopeManager):
                 });
             }
             decl.init.object.name = CONTEXT_NAME;
+            return;
+        }
+
+        if (isContextDataProperty) {
+            // For context.data properties, register as context-bound AND as built-in series if applicable
+            if (decl.id.name) {
+                scopeManager.addContextBoundVar(decl.id.name);
+                if (isBuiltinSeries(decl.id.name)) {
+                    scopeManager.addBuiltinSeriesVar(decl.id.name);
+                }
+            }
+            if (decl.id.properties) {
+                decl.id.properties.forEach((property: any) => {
+                    if (property.key.name) {
+                        scopeManager.addContextBoundVar(property.key.name);
+                        if (isBuiltinSeries(property.key.name)) {
+                            scopeManager.addBuiltinSeriesVar(property.key.name);
+                        }
+                    }
+                });
+            }
+            decl.init.object.object.name = CONTEXT_NAME;
             return;
         }
 
