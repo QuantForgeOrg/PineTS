@@ -24,6 +24,9 @@ export class Context {
     public taState: any = {}; // State for incremental TA calculations
 
     public NA: any = NaN;
+    
+    // Track the current length of series for index translation
+    public _seriesLength: number = 0;
 
     public math: PineMath;
     public ta: TechnicalAnalysis;
@@ -96,6 +99,20 @@ export class Context {
     }
 
     //#region [Runtime functions] ===========================
+
+    /**
+     * Translates Pine Script array index to actual array position
+     * Pine Script uses [0] for current, [1] for previous, etc.
+     * With forward arrays: series[0] maps to series[length-1], series[1] to series[length-2]
+     * @param series - the array to access
+     * @param index - Pine Script index (0 = current, 1 = previous, etc.)
+     * @returns the translated index
+     */
+    _translateIndex(series: any[], index: number): number {
+        const length = this._seriesLength;
+        if (length === 0) return 0;
+        return length - 1 - index;
+    }
 
     /**
      * this function is used to initialize the target variable with the source array

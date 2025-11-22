@@ -3,11 +3,13 @@ export class TechnicalAnalysis {
     constructor(private context: any) {}
 
     public get tr() {
-        const val = this.context.math.max(
-            this.context.data.high[0] - this.context.data.low[0],
-            this.context.math.abs(this.context.data.high[0] - this.context.data.close[1]),
-            this.context.math.abs(this.context.data.low[0] - this.context.data.close[1])
-        );
+        const data = this.context.data;
+        // With forward arrays, current values are at the end
+        const highNow = data.high[data.high.length - 1];
+        const lowNow = data.low[data.low.length - 1];
+        const closePrev = data.close[data.close.length - 2]; // length - 2 is previous
+
+        const val = this.context.math.max(highNow - lowNow, this.context.math.abs(highNow - closePrev), this.context.math.abs(lowNow - closePrev));
         return val;
     }
 
@@ -40,7 +42,7 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0];
+        const currentValue = source[source.length - 1];
 
         if (state.initCount < period) {
             // Accumulate for SMA initialization
@@ -74,10 +76,13 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0] || 0;
 
-        // Add current value to window
-        state.window.unshift(currentValue);
+        // With forward arrays, we need to access the last element (current value)
+        // source is an array that grows forward, so the current value is at the end
+        const currentValue = source[source.length - 1] || 0;
+
+        // Add current value to window (push to end since arrays grow forward)
+        state.window.push(currentValue);
         state.sum += currentValue;
 
         if (state.window.length < period) {
@@ -86,8 +91,8 @@ export class TechnicalAnalysis {
         }
 
         if (state.window.length > period) {
-            // Remove oldest value from sum
-            const oldValue = state.window.pop();
+            // Remove oldest value from sum (shift from beginning)
+            const oldValue = state.window.shift();
             state.sum -= oldValue;
         }
 
@@ -107,19 +112,19 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0];
-        const currentVolume = this.context.data.volume[0];
+        const currentValue = source[source.length - 1];
+        const currentVolume = this.context.data.volume[this.context.data.volume.length - 1];
 
-        state.window.unshift(currentValue);
-        state.volumeWindow.unshift(currentVolume);
+        state.window.push(currentValue);
+        state.volumeWindow.push(currentVolume);
 
         if (state.window.length < period) {
             return NaN;
         }
 
         if (state.window.length > period) {
-            state.window.pop();
-            state.volumeWindow.pop();
+            state.window.shift();
+            state.volumeWindow.shift();
         }
 
         let sumVolPrice = 0;
@@ -145,23 +150,24 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0];
+        const currentValue = source[source.length - 1];
 
-        state.window.unshift(currentValue);
+        state.window.push(currentValue);
 
         if (state.window.length < period) {
             return NaN;
         }
 
         if (state.window.length > period) {
-            state.window.pop();
+            state.window.shift();
         }
 
         let numerator = 0;
         let denominator = 0;
         for (let i = 0; i < period; i++) {
             const weight = period - i;
-            numerator += state.window[i] * weight;
+            // Access from end: most recent is at end, oldest at beginning
+            numerator += state.window[period - 1 - i] * weight;
             denominator += weight;
         }
 
@@ -195,7 +201,7 @@ export class TechnicalAnalysis {
         }
 
         const rawHma = 2 * wma1 - wma2;
-        this.context.taState[stateKey].unshift(rawHma);
+        this.context.taState[stateKey].push(rawHma);
 
         // Apply WMA to the raw HMA values
         const hmaStateKey = _callId ? `${_callId}_hma_final` : `hma_final_${period}`;
@@ -204,21 +210,22 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[hmaStateKey];
-        state.window.unshift(rawHma);
+        state.window.push(rawHma);
 
         if (state.window.length < sqrtPeriod) {
             return NaN;
         }
 
         if (state.window.length > sqrtPeriod) {
-            state.window.pop();
+            state.window.shift();
         }
 
         let numerator = 0;
         let denominator = 0;
         for (let i = 0; i < sqrtPeriod; i++) {
             const weight = sqrtPeriod - i;
-            numerator += state.window[i] * weight;
+            // Access from end: most recent is at end, oldest at beginning
+            numerator += state.window[sqrtPeriod - 1 - i] * weight;
             denominator += weight;
         }
 
@@ -238,7 +245,7 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0] || 0;
+        const currentValue = source[source.length - 1] || 0;
 
         if (state.initCount < period) {
             // Accumulate for SMA initialization
@@ -272,19 +279,19 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0];
+        const currentValue = source[source.length - 1];
 
-        state.window.unshift(currentValue);
+        state.window.push(currentValue);
 
         if (state.window.length <= length) {
             return NaN;
         }
 
         if (state.window.length > length + 1) {
-            state.window.pop();
+            state.window.shift();
         }
 
-        const change = currentValue - state.window[length];
+        const change = currentValue - state.window[0];
         return this.context.precision(change);
     }
 
@@ -306,7 +313,7 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0];
+        const currentValue = source[source.length - 1];
 
         // Calculate gain/loss from previous value
         if (state.prevValue !== null) {
@@ -364,9 +371,10 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const high = this.context.data.high[0];
-        const low = this.context.data.low[0];
-        const close = this.context.data.close[0];
+        const data = this.context.data;
+        const high = data.high[data.high.length - 1];
+        const low = data.low[data.low.length - 1];
+        const close = data.close[data.close.length - 1];
 
         // Calculate True Range
         let tr;
@@ -419,19 +427,19 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0];
+        const currentValue = source[source.length - 1];
 
-        state.window.unshift(currentValue);
+        state.window.push(currentValue);
 
         if (state.window.length <= length) {
             return NaN;
         }
 
         if (state.window.length > length + 1) {
-            state.window.pop();
+            state.window.shift();
         }
 
-        const prevValue = state.window[length];
+        const prevValue = state.window[0];
         const roc = ((currentValue - prevValue) / prevValue) * 100;
         return this.context.precision(roc);
     }
@@ -448,9 +456,9 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0] || 0;
+        const currentValue = source[source.length - 1] || 0;
 
-        state.window.unshift(currentValue);
+        state.window.push(currentValue);
         state.sum += currentValue;
 
         if (state.window.length < length) {
@@ -458,7 +466,7 @@ export class TechnicalAnalysis {
         }
 
         if (state.window.length > length) {
-            const oldValue = state.window.pop();
+            const oldValue = state.window.shift();
             state.sum -= oldValue;
         }
 
@@ -484,16 +492,16 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0];
+        const currentValue = source[source.length - 1];
 
-        state.window.unshift(currentValue);
+        state.window.push(currentValue);
 
         if (state.window.length < length) {
             return NaN;
         }
 
         if (state.window.length > length) {
-            state.window.pop();
+            state.window.shift();
         }
 
         let sum = 0;
@@ -521,16 +529,16 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0];
+        const currentValue = source[source.length - 1];
 
-        state.window.unshift(currentValue);
+        state.window.push(currentValue);
 
         if (state.window.length < length) {
             return NaN;
         }
 
         if (state.window.length > length) {
-            state.window.pop();
+            state.window.shift();
         }
 
         const max = Math.max(...state.window.filter((v) => !isNaN(v)));
@@ -549,16 +557,16 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0];
+        const currentValue = source[source.length - 1];
 
-        state.window.unshift(currentValue);
+        state.window.push(currentValue);
 
         if (state.window.length < length) {
             return NaN;
         }
 
         if (state.window.length > length) {
-            state.window.pop();
+            state.window.shift();
         }
 
         const validValues = state.window.filter((v) => !isNaN(v) && v !== undefined);
@@ -578,16 +586,16 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0];
+        const currentValue = source[source.length - 1];
 
-        state.window.unshift(currentValue);
+        state.window.push(currentValue);
 
         if (state.window.length < length) {
             return NaN;
         }
 
         if (state.window.length > length) {
-            state.window.pop();
+            state.window.shift();
         }
 
         const sorted = state.window.slice().sort((a, b) => a - b);
@@ -610,9 +618,9 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0];
+        const currentValue = source[source.length - 1];
 
-        state.window.unshift(currentValue);
+        state.window.push(currentValue);
         state.sum += currentValue;
 
         if (state.window.length < length) {
@@ -620,7 +628,7 @@ export class TechnicalAnalysis {
         }
 
         if (state.window.length > length) {
-            const oldValue = state.window.pop();
+            const oldValue = state.window.shift();
             state.sum -= oldValue;
         }
 
@@ -649,16 +657,16 @@ export class TechnicalAnalysis {
         }
 
         const state = this.context.taState[stateKey];
-        const currentValue = source[0];
+        const currentValue = source[source.length - 1];
 
-        state.window.unshift(currentValue);
+        state.window.push(currentValue);
 
         if (state.window.length < length) {
             return NaN;
         }
 
         if (state.window.length > length) {
-            state.window.pop();
+            state.window.shift();
         }
 
         let sumX = 0;
@@ -668,9 +676,9 @@ export class TechnicalAnalysis {
         const n = length;
 
         // Calculate regression coefficients
-        // window[0] is most recent (x = length - 1), window[length-1] is oldest (x = 0)
+        // window[0] is oldest (x = 0), window[length-1] is most recent (x = length - 1)
         for (let j = 0; j < length; j++) {
-            const x = length - 1 - j; // Most recent bar has highest x value
+            const x = j; // Oldest bar has lowest x value
             const y = state.window[j];
             sumX += x;
             sumY += y;
@@ -706,18 +714,21 @@ export class TechnicalAnalysis {
                 prevLowerBand: null,
                 prevSupertrend: null,
                 prevDirection: null,
+                prevClose: null,
             };
         }
 
         const state = this.context.taState[stateKey];
-        const high = this.context.data.high[0];
-        const low = this.context.data.low[0];
-        const close = this.context.data.close[0];
+        const data = this.context.data;
+        const high = data.high[data.high.length - 1];
+        const low = data.low[data.low.length - 1];
+        const close = data.close[data.close.length - 1];
 
         // Get ATR value (already optimized) - use derived call ID
         const atrValue = this.atr(atrPeriod, _callId ? `${_callId}_atr` : undefined);
 
         if (isNaN(atrValue)) {
+            state.prevClose = close;
             return [[NaN, 0]];
         }
 
@@ -726,14 +737,14 @@ export class TechnicalAnalysis {
         let lowerBand = hl2 - factor * atrValue;
 
         // Adjust bands based on previous values
-        if (state.prevUpperBand !== null) {
-            if (upperBand < state.prevUpperBand || this.context.data.close[1] > state.prevUpperBand) {
+        if (state.prevUpperBand !== null && state.prevClose !== null) {
+            if (upperBand < state.prevUpperBand || state.prevClose > state.prevUpperBand) {
                 upperBand = upperBand;
             } else {
                 upperBand = state.prevUpperBand;
             }
 
-            if (lowerBand > state.prevLowerBand || this.context.data.close[1] < state.prevLowerBand) {
+            if (lowerBand > state.prevLowerBand || state.prevClose < state.prevLowerBand) {
                 lowerBand = lowerBand;
             } else {
                 lowerBand = state.prevLowerBand;
@@ -773,31 +784,36 @@ export class TechnicalAnalysis {
         state.prevLowerBand = lowerBand;
         state.prevSupertrend = supertrend;
         state.prevDirection = direction;
+        state.prevClose = close;
 
         return [[this.context.precision(supertrend), direction]];
     }
 
     crossover(source1, source2) {
-        // Get current values
-        const current1 = Array.isArray(source1) ? source1[0] : source1;
-        const current2 = Array.isArray(source2) ? source2[0] : source2;
+        // Get current values (last element)
+        const len1 = source1.length;
+        const len2 = source2.length;
+        const current1 = Array.isArray(source1) ? source1[len1 - 1] : source1;
+        const current2 = Array.isArray(source2) ? source2[len2 - 1] : source2;
 
-        // Get previous values
-        const prev1 = Array.isArray(source1) ? source1[1] : this.context.data.series[source1][1];
-        const prev2 = Array.isArray(source2) ? source2[1] : this.context.data.series[source2][1];
+        // Get previous values (second to last)
+        const prev1 = Array.isArray(source1) && len1 > 1 ? source1[len1 - 2] : this.context.data.series?.[source1]?.[len1 - 2];
+        const prev2 = Array.isArray(source2) && len2 > 1 ? source2[len2 - 2] : this.context.data.series?.[source2]?.[len2 - 2];
 
         // Check if source1 crossed above source2
         return prev1 < prev2 && current1 > current2;
     }
 
     crossunder(source1, source2) {
-        // Get current values
-        const current1 = Array.isArray(source1) ? source1[0] : source1;
-        const current2 = Array.isArray(source2) ? source2[0] : source2;
+        // Get current values (last element)
+        const len1 = source1.length;
+        const len2 = source2.length;
+        const current1 = Array.isArray(source1) ? source1[len1 - 1] : source1;
+        const current2 = Array.isArray(source2) ? source2[len2 - 1] : source2;
 
-        // Get previous values
-        const prev1 = Array.isArray(source1) ? source1[1] : this.context.data.series[source1][1];
-        const prev2 = Array.isArray(source2) ? source2[1] : this.context.data.series[source2][1];
+        // Get previous values (second to last)
+        const prev1 = Array.isArray(source1) && len1 > 1 ? source1[len1 - 2] : this.context.data.series?.[source1]?.[len1 - 2];
+        const prev2 = Array.isArray(source2) && len2 > 1 ? source2[len2 - 2] : this.context.data.series?.[source2]?.[len2 - 2];
 
         // Check if source1 crossed below source2
         return prev1 > prev2 && current1 < current2;
@@ -815,7 +831,8 @@ export class TechnicalAnalysis {
         const leftbars = Array.isArray(_leftbars) ? _leftbars[0] : _leftbars;
         const rightbars = Array.isArray(_rightbars) ? _rightbars[0] : _rightbars;
 
-        const result = pivothigh(source.slice(0).reverse(), leftbars, rightbars);
+        // No need to reverse - source is already in forward order
+        const result = pivothigh(source.slice(0), leftbars, rightbars);
         const idx = this.context.idx;
         return this.context.precision(result[idx]);
     }
@@ -833,7 +850,8 @@ export class TechnicalAnalysis {
         const leftbars = Array.isArray(_leftbars) ? _leftbars[0] : _leftbars;
         const rightbars = Array.isArray(_rightbars) ? _rightbars[0] : _rightbars;
 
-        const result = pivotlow(source.slice(0).reverse(), leftbars, rightbars);
+        // No need to reverse - source is already in forward order
+        const result = pivotlow(source.slice(0), leftbars, rightbars);
         const idx = this.context.idx;
         return this.context.precision(result[idx]);
     }

@@ -13,7 +13,9 @@ export class PineArray {
 
     param(source, index = 0) {
         if (Array.isArray(source)) {
-            return source[index];
+            // With forward arrays, translate index: 0 = current (last), 1 = previous (second-to-last)
+            const actualIndex = source.length - 1 - index;
+            return source[actualIndex];
         }
         return source;
     }

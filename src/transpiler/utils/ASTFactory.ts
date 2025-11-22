@@ -48,7 +48,16 @@ export const ASTFactory = {
 
     createArrayAccess(object: any, index: any): any {
         const indexNode = typeof index === 'number' ? this.createLiteral(index) : index;
-        return this.createMemberExpression(object, indexNode, true);
+        
+        // Wrap index with translation: $._translateIndex(array, index)
+        // This converts Pine Script's [0] = current, [1] = previous
+        // to actual array positions with forward-growing arrays
+        const translatedIndex = this.createCallExpression(
+            this.createMemberExpression(this.createContextIdentifier(), this.createIdentifier('_translateIndex'), false),
+            [object, indexNode]
+        );
+        
+        return this.createMemberExpression(object, translatedIndex, true);
     },
 
     createCallExpression(callee: any, args: any[]): any {

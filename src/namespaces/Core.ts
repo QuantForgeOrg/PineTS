@@ -4,7 +4,9 @@ export class Core {
     public color = {
         param: (source, index = 0) => {
             if (Array.isArray(source)) {
-                return source[index];
+                // With forward arrays, translate index
+                const actualIndex = source.length - 1 - index;
+                return source[actualIndex];
             }
             return source;
         },
@@ -39,7 +41,7 @@ export class Core {
         const _options: any = {};
         for (let key in options) {
             if (Array.isArray(options[key])) {
-                _options[key] = options[key][0];
+                _options[key] = options[key][options[key].length - 1];
             } else {
                 _options[key] = options[key];
             }
@@ -58,7 +60,7 @@ export class Core {
 
         this.context.plots[title].data.push({
             time: this.context.marketData[this.context.marketData.length - this.context.idx - 1].openTime,
-            value: series[0],
+            value: series[series.length - 1],
             options: { ...this.extractPlotOptions(options), style: 'char' },
         });
     }
@@ -70,17 +72,17 @@ export class Core {
 
         this.context.plots[title].data.push({
             time: this.context.marketData[this.context.marketData.length - this.context.idx - 1].openTime,
-            value: series[0],
+            value: series[series.length - 1],
             options: this.extractPlotOptions(options),
         });
     }
 
     na(series: any) {
-        return Array.isArray(series) ? isNaN(series[0]) : isNaN(series);
+        return Array.isArray(series) ? isNaN(series[series.length - 1]) : isNaN(series);
     }
     nz(series: any, replacement: number = 0) {
-        const val = Array.isArray(series) ? series[0] : series;
-        const rep = Array.isArray(series) ? replacement[0] : replacement;
+        const val = Array.isArray(series) ? series[series.length - 1] : series;
+        const rep = Array.isArray(replacement) ? replacement[replacement.length - 1] : replacement;
         return isNaN(val) ? rep : val;
     }
 }
