@@ -48,7 +48,7 @@ export const ASTFactory = {
 
     createArrayAccess(object: any, index: any): any {
         const indexNode = typeof index === 'number' ? this.createLiteral(index) : index;
-        
+
         // Wrap index with translation: $._translateIndex(array, index)
         // This converts Pine Script's [0] = current, [1] = previous
         // to actual array positions with forward-growing arrays
@@ -56,7 +56,7 @@ export const ASTFactory = {
             this.createMemberExpression(this.createContextIdentifier(), this.createIdentifier('_translateIndex'), false),
             [object, indexNode]
         );
-        
+
         return this.createMemberExpression(object, translatedIndex, true);
     },
 
