@@ -12,6 +12,9 @@ export class PineArray {
     constructor(private context: any) {}
 
     param(source, index = 0) {
+        if (source[index] instanceof PineArrayObject) {
+            return source[index];
+        }
         if (Array.isArray(source)) {
             // With forward arrays, translate index: 0 = current (last), 1 = previous (second-to-last)
             const actualIndex = source.length - 1 - index;
