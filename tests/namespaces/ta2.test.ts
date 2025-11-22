@@ -181,12 +181,65 @@ describe('Technical Analysis Functions - Unit Tests', () => {
     });
 
     it('LOWEST - Lowest Value', async () => {
-        const result = await runTAFunctionWithArgs('lowest', 'close', 14);
+        const pineTS = new PineTS(Provider.Binance, 'BTCUSDC', 'D', null, new Date('2025-09-29').getTime(), new Date('2025-11-20').getTime());
 
-        const part = result.values.reverse().slice(0, 10);
-        const expected = [97652.2, 97861.04, 97961.56, 97961.56, 97704.6, 97657.94, 97657.94, 97657.94, 97657.94, 97657.94];
-        console.log(' LOWEST ', part);
-        expect(part).toEqual(arrayPrecision(expected));
+        const sourceCode = (context: Context) => {
+            const { low, open } = context.data;
+            const ta = context.ta;
+            const { plot, plotchar } = context.core;
+            const ta_lowest = ta.lowest(low, 14);
+            plotchar(ta_lowest, 'result');
+            const _low = low[0];
+            const _open = open[0];
+
+            return { ta_lowest, _low, _open };
+        };
+
+        const { result, plots } = await pineTS.run(sourceCode);
+
+        let plotdata = plots['result'].data;
+
+        for (let i = 0; i < plotdata.length; i++) {
+            plotdata[i].strtime = new Date(plotdata[i].time).toISOString().slice(0, -1) + '-00:00';
+            plotdata[i]._low = result._low[i];
+            plotdata[i]._open = result._open[i];
+            delete plotdata[i].options;
+        }
+        //remove everything before 2025-10-29
+        plotdata = plotdata.filter((e) => e.time >= new Date('2025-10-29').getTime());
+        // plotdata.forEach((e) => {
+        //     e.strtime = new Date(e.time).toISOString().slice(0, -1) + '-00:00';
+
+        //     delete e.options;
+        // });
+
+        const plotdata_str = plotdata.map((e) => `[${e.strtime}]: ${e.value} | Low=${e._low} | Open=${e._open}`).join('\n');
+
+        const expected_plot = `[2025-10-29T00:00:00.000-00:00]: 103529.01 | Low=109284.24 | Open=112925.5
+[2025-10-30T00:00:00.000-00:00]: 103529.01 | Low=106301.44 | Open=110049.03
+[2025-10-31T00:00:00.000-00:00]: 106136.22 | Low=108277.3 | Open=108317.02
+[2025-11-01T00:00:00.000-00:00]: 106136.22 | Low=109359.87 | Open=109576.61
+[2025-11-02T00:00:00.000-00:00]: 106301.44 | Low=109475.11 | Open=110065.22
+[2025-11-03T00:00:00.000-00:00]: 105316.11 | Low=105316.11 | Open=110550.87
+[2025-11-04T00:00:00.000-00:00]: 98894.48 | Low=98894.48 | Open=106577.47
+[2025-11-05T00:00:00.000-00:00]: 98894.48 | Low=98961.66 | Open=101496.26
+[2025-11-06T00:00:00.000-00:00]: 98894.48 | Low=100258.57 | Open=103890.38
+[2025-11-07T00:00:00.000-00:00]: 98894.48 | Low=99203.41 | Open=101318.02
+[2025-11-08T00:00:00.000-00:00]: 98894.48 | Low=101433.47 | Open=103300.01
+[2025-11-09T00:00:00.000-00:00]: 98894.48 | Low=101371.35 | Open=102294.69
+[2025-11-10T00:00:00.000-00:00]: 98894.48 | Low=104266.68 | Open=104710.21
+[2025-11-11T00:00:00.000-00:00]: 98894.48 | Low=102459.93 | Open=105993.66
+[2025-11-12T00:00:00.000-00:00]: 98894.48 | Low=100801.16 | Open=103035.66
+[2025-11-13T00:00:00.000-00:00]: 97957.49 | Low=97957.49 | Open=101652.68
+[2025-11-14T00:00:00.000-00:00]: 93948.96 | Low=93948.96 | Open=99644.01
+[2025-11-15T00:00:00.000-00:00]: 93948.96 | Low=94508.28 | Open=94526.87
+[2025-11-16T00:00:00.000-00:00]: 92920 | Low=92920 | Open=95562.68
+[2025-11-17T00:00:00.000-00:00]: 91203.56 | Low=91203.56 | Open=94205.7
+[2025-11-18T00:00:00.000-00:00]: 89205.78 | Low=89205.78 | Open=92123.22
+[2025-11-19T00:00:00.000-00:00]: 88530.87 | Low=88530.87 | Open=92935.93
+[2025-11-20T00:00:00.000-00:00]: 86000 | Low=86000 | Open=91489.59`;
+
+        expect(plotdata_str.trim()).toEqual(expected_plot.trim());
     });
 
     it('MEDIAN - Median Value', async () => {
@@ -262,14 +315,15 @@ describe('Technical Analysis Functions - Unit Tests', () => {
         // Crossover returns a boolean per bar, need to collect it over time
         //const klines = await getKlines('BTCUSDT', '1d', 50, 0, 1761350400000 - 1);
         //const pineTS = new PineTS(klines);
-        const pineTS = new PineTS(Provider.Binance, 'BTCUSDT', 'D', null, new Date('2025-10-29').getTime(), 1763596800000);
+        const pineTS = new PineTS(Provider.Binance, 'BTCUSDT', 'D', null, new Date('2025-10-29').getTime(), new Date('2025-11-20').getTime());
 
         const sourceCode = (context: Context) => {
-            const { close } = context.data;
+            const { close, open } = context.data;
             const ta = context.ta;
             const { plot, plotchar } = context.core;
             const ema9 = ta.ema(close, 9);
             const ema18 = ta.ema(close, 18);
+
             const crossover = ta.crossover(close, open);
             plotchar(crossover, 'crossover');
             return { crossover };
@@ -277,7 +331,8 @@ describe('Technical Analysis Functions - Unit Tests', () => {
 
         const { result, plots } = await pineTS.run(sourceCode);
 
-        const plotdata = plots['crossover'].data.reverse();
+        const plotdata = plots['crossover'].data;
+
         plotdata.forEach((e) => {
             e.time = new Date(e.time).toISOString().slice(0, -1) + '-00:00';
 
@@ -309,10 +364,8 @@ describe('Technical Analysis Functions - Unit Tests', () => {
 [2025-11-19T00:00:00.000-00:00]: false
 [2025-11-20T00:00:00.000-00:00]: false`;
 
-        console.log('>>> plotdata_str: \n', plotdata_str);
-        console.log('>>> expected_plot: \n', expected_plot);
-        expect(plotdata_str).toEqual(expected_plot);
-        const part = result.crossover ? result.crossover.reverse() : [];
+        expect(plotdata_str.trim()).toEqual(expected_plot.trim());
+        //const part = result.crossover ? result.crossover.reverse() : [];
 
         //console.log(' CROSSOVER ', part);
         //expect(part).toBeDefined();
@@ -322,25 +375,55 @@ describe('Technical Analysis Functions - Unit Tests', () => {
 
     it('CROSSUNDER - Crossunder Detection', async () => {
         // Crossunder returns a boolean per bar, need to collect it over time
-        const klines = await getKlines('BTCUSDT', '1h', 50, 0, 1736071200000 - 1);
-        const pineTS = new PineTS(klines);
 
-        const sourceCode = `(context) => {
-            const { close } = context.data;
+        const pineTS = new PineTS(Provider.Binance, 'BTCUSDT', 'D', null, new Date('2025-10-29').getTime(), new Date('2025-11-20').getTime());
+
+        const sourceCode = (context) => {
+            const { close, open } = context.data;
             const ta = context.ta;
-            const ema9 = ta.ema(close, 9);
-            const ema18 = ta.ema(close, 18);
-            const crossunder = ta.crossunder(ema9, ema18);
+            const { plotchar } = context.core;
+            const crossunder = ta.crossunder(close, open);
+            plotchar(crossunder, 'crossunder');
+
             return { crossunder };
-        }`;
+        };
 
-        const { result } = await pineTS.run(sourceCode);
-        const part = result.crossunder ? result.crossunder.reverse().slice(0, 10) : [];
+        const { result, plots } = await pineTS.run(sourceCode);
 
-        console.log(' CROSSUNDER ', part);
-        expect(part).toBeDefined();
-        expect(part.length).toBe(10);
-        expect(part.every((v) => typeof v === 'boolean')).toBe(true);
+        const plotdata = plots['crossunder']?.data;
+
+        plotdata.forEach((e) => {
+            e.time = new Date(e.time).toISOString().slice(0, -1) + '-00:00';
+
+            delete e.options;
+        });
+        const plotdata_str = plotdata.map((e) => `[${e.time}]: ${e.value}`).join('\n');
+
+        const expected_plot = `[2025-10-29T00:00:00.000-00:00]: false
+[2025-10-30T00:00:00.000-00:00]: false
+[2025-10-31T00:00:00.000-00:00]: false
+[2025-11-01T00:00:00.000-00:00]: false
+[2025-11-02T00:00:00.000-00:00]: false
+[2025-11-03T00:00:00.000-00:00]: true
+[2025-11-04T00:00:00.000-00:00]: false
+[2025-11-05T00:00:00.000-00:00]: false
+[2025-11-06T00:00:00.000-00:00]: true
+[2025-11-07T00:00:00.000-00:00]: false
+[2025-11-08T00:00:00.000-00:00]: true
+[2025-11-09T00:00:00.000-00:00]: false
+[2025-11-10T00:00:00.000-00:00]: false
+[2025-11-11T00:00:00.000-00:00]: true
+[2025-11-12T00:00:00.000-00:00]: false
+[2025-11-13T00:00:00.000-00:00]: false
+[2025-11-14T00:00:00.000-00:00]: false
+[2025-11-15T00:00:00.000-00:00]: false
+[2025-11-16T00:00:00.000-00:00]: true
+[2025-11-17T00:00:00.000-00:00]: false
+[2025-11-18T00:00:00.000-00:00]: false
+[2025-11-19T00:00:00.000-00:00]: true
+[2025-11-20T00:00:00.000-00:00]: false`;
+
+        expect(plotdata_str.trim()).toEqual(expected_plot.trim());
     });
 
     it('PIVOTHIGH - Pivot High Detection', async () => {

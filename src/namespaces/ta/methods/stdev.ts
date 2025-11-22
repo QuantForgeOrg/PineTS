@@ -1,0 +1,43 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+
+export function stdev(context: any) {
+    return (source: any, _length: any, _bias: any = true, _callId?: string) => {
+        const length = Array.isArray(_length) ? _length[0] : _length;
+        const bias = Array.isArray(_bias) ? _bias[0] : _bias;
+
+        // Standard Deviation
+        if (!context.taState) context.taState = {};
+        const stateKey = _callId || `stdev_${length}_${bias}`;
+
+        if (!context.taState[stateKey]) {
+            context.taState[stateKey] = { window: [], sum: 0 };
+        }
+
+        const state = context.taState[stateKey];
+        const currentValue = source[0];
+
+        state.window.unshift(currentValue);
+        state.sum += currentValue;
+
+        if (state.window.length < length) {
+            return NaN;
+        }
+
+        if (state.window.length > length) {
+            const oldValue = state.window.pop();
+            state.sum -= oldValue;
+        }
+
+        const mean = state.sum / length;
+        let sumSquaredDiff = 0;
+        for (let i = 0; i < length; i++) {
+            sumSquaredDiff += Math.pow(state.window[i] - mean, 2);
+        }
+
+        const divisor = bias ? length : length - 1;
+        const stdev = Math.sqrt(sumSquaredDiff / divisor);
+
+        return context.precision(stdev);
+    };
+}
+

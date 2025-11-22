@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-// Copyright (C) 2025 Ala-eddine KADDOURI
+// Copyright (C) 2025 Alaa-eddine KADDOURI
 
 import { Core } from '@pinets/namespaces/Core';
-import { Input } from '@pinets/namespaces/Input';
-import PineMath from '@pinets/namespaces/PineMath';
-import { PineRequest } from '@pinets/namespaces/PineRequest';
-import TechnicalAnalysis from '@pinets/namespaces/TechnicalAnalysis';
-import { PineArray } from './namespaces/PineArray';
+import { Input } from '@pinets/namespaces/input/input.index';
+import PineMath from '@pinets/namespaces/math/math.index';
+import { PineRequest } from '@pinets/namespaces/request/request.index';
+import TechnicalAnalysis from '@pinets/namespaces/ta/ta.index';
+import { PineArray } from './namespaces/array/array.index';
 import { IProvider } from './marketData/IProvider';
 
 export class Context {

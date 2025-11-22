@@ -17,19 +17,6 @@ describe('DCA Sniper', () => {
             const { close, open, high, low } = context.data;
             const { plotchar, color, plot, na, nz } = context.core;
 
-            //const MaxMinNz = (value, max = 100, min = 0, def = 50) => nz(math.max(math.min(value, max), min), def);
-
-            // const test = (val) => val + 1;
-
-            // const distanceSMA = (l, ampl, offset) => {
-            //     const source = close;
-            //     const sma = ta.sma(source, l);
-            //     return test(source);
-            // };
-
-            // const m = MaxMinNz(10);
-            // const a = distanceSMA(5, 5, 1);
-
             const test2 = (value) => {
                 return value;
             };

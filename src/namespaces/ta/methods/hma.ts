@@ -1,0 +1,64 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+
+export function hma(context: any) {
+    return (source: any, _period: any, _callId?: string) => {
+        const period = Array.isArray(_period) ? _period[0] : _period;
+
+        // Hull Moving Average: HMA = WMA(2*WMA(n/2) - WMA(n), sqrt(n))
+        const halfPeriod = Math.floor(period / 2);
+        const sqrtPeriod = Math.floor(Math.sqrt(period));
+
+        // Get wma function from context.ta
+        const wmaFn = context.ta.wma;
+
+        // Pass derived call IDs to internal WMA calls to avoid state collision
+        const wma1 = wmaFn(source, halfPeriod, _callId ? `${_callId}_wma1` : undefined);
+        const wma2 = wmaFn(source, period, _callId ? `${_callId}_wma2` : undefined);
+
+        if (isNaN(wma1) || isNaN(wma2)) {
+            return NaN;
+        }
+
+        // Create synthetic source for final WMA: 2*wma1 - wma2
+        // We need to feed this into WMA calculation
+        // Store the raw value in a temporary series
+        if (!context.taState) context.taState = {};
+        const stateKey = _callId || `hma_raw_${period}`;
+
+        if (!context.taState[stateKey]) {
+            context.taState[stateKey] = [];
+        }
+
+        const rawHma = 2 * wma1 - wma2;
+        context.taState[stateKey].unshift(rawHma);
+
+        // Apply WMA to the raw HMA values
+        const hmaStateKey = _callId ? `${_callId}_hma_final` : `hma_final_${period}`;
+        if (!context.taState[hmaStateKey]) {
+            context.taState[hmaStateKey] = { window: [] };
+        }
+
+        const state = context.taState[hmaStateKey];
+        state.window.unshift(rawHma);
+
+        if (state.window.length < sqrtPeriod) {
+            return NaN;
+        }
+
+        if (state.window.length > sqrtPeriod) {
+            state.window.pop();
+        }
+
+        let numerator = 0;
+        let denominator = 0;
+        for (let i = 0; i < sqrtPeriod; i++) {
+            const weight = sqrtPeriod - i;
+            numerator += state.window[i] * weight;
+            denominator += weight;
+        }
+
+        const hma = numerator / denominator;
+        return context.precision(hma);
+    };
+}
+

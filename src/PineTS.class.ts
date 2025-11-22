@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-// Copyright (C) 2025 Ala-eddine KADDOURI
+// Copyright (C) 2025 Alaa-eddine KADDOURI
 import { transpile } from '@pinets/transpiler/index';
 import { Context } from './Context.class';
 

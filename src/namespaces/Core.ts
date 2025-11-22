@@ -57,7 +57,7 @@ export class Core {
         }
 
         this.context.plots[title].data.push({
-            time: this.context.marketData[this.context.marketData.length - this.context.idx - 1].openTime,
+            time: this.context.marketData[this.context.idx].openTime,
             value: series[0],
             options: { ...this.extractPlotOptions(options), style: 'char' },
         });
@@ -69,7 +69,7 @@ export class Core {
         }
 
         this.context.plots[title].data.push({
-            time: this.context.marketData[this.context.marketData.length - this.context.idx - 1].openTime,
+            time: this.context.marketData[this.context.idx].openTime,
             value: series[0],
             options: this.extractPlotOptions(options),
         });
