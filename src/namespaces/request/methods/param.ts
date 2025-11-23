@@ -14,7 +14,11 @@ export function param(context: any) {
             const val = source[source.length - 1 - (index || 0)];
             return [val, name];
         } else {
-            context.params[name][0] = source;
+            if (context.params[name].length === 0) {
+                context.params[name].push(source);
+            } else {
+                context.params[name][context.params[name].length - 1] = source;
+            }
             return [source, name];
         }
     };

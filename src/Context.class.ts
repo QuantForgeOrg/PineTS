@@ -161,7 +161,11 @@ export class Context {
             this.params[name] = source.slice(0);
             return this.params[name];
         } else {
-            this.params[name][0] = source;
+            if (this.params[name].length === 0) {
+                this.params[name].push(source);
+            } else {
+                this.params[name][this.params[name].length - 1] = source;
+            }
             return this.params[name];
         }
     }

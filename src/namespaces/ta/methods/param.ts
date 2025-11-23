@@ -11,7 +11,11 @@ export function param(context: any) {
             context.params[name] = source.slice(0);
             return context.params[name];
         } else {
-            context.params[name][0] = source;
+            if (context.params[name].length === 0) {
+                context.params[name].push(source);
+            } else {
+                context.params[name][context.params[name].length - 1] = source;
+            }
             return context.params[name];
         }
     };

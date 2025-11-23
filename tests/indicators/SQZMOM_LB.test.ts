@@ -59,18 +59,18 @@ describe('Indicators', () => {
             const ta_highest = ta.highest(high, lengthKC);
             const ta_sma = ta.sma(close, lengthKC);
             const ta_avg = math.avg(math.avg(ta_highest, ta_lowest), ta_sma);
-            const val = ta.linreg(source - ta_avg, 14, 0);
+            //const val = ta.linreg(source - ta_avg, lengthKC, 0);
 
-            plotchar(ta_lowest, 'ta_lowest');
+            //plotchar(ta_lowest, 'ta_lowest');
             //console.log('>>> ', ta_lowest + ' | ' + ta_highest + ' | ' + ta_sma + ' | ' + ta_avg + ' | ' + val);
 
             //console.log('>>> val: ', source, ta_avg, val);
 
-            // const val = ta.linreg(
-            //     source - math.avg(math.avg(ta.highest(high, lengthKC), ta.lowest(low, lengthKC)), ta.sma(close, lengthKC)),
-            //     lengthKC,
-            //     0
-            // );
+            const val = ta.linreg(
+                source - math.avg(math.avg(ta.highest(high, lengthKC), ta.lowest(low, lengthKC)), ta.sma(close, lengthKC)),
+                lengthKC,
+                0
+            );
             //console.log('>>> val: ', source);
 
             const iff_1 = val > nz(val[1]) ? color.lime : color.green;
