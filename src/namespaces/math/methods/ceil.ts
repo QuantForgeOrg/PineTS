@@ -2,7 +2,7 @@
 
 export function ceil(context: any) {
     return (source: number[]) => {
-        return Math.ceil(source[0]);
+        return Math.ceil(source[source.length - 1]);
     };
 }
 

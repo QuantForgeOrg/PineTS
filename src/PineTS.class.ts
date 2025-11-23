@@ -373,18 +373,18 @@ export class PineTS {
             }
         }
 
-        // Also remove from context.data arrays
-        context.data.close.shift();
-        context.data.open.shift();
-        context.data.high.shift();
-        context.data.low.shift();
-        context.data.volume.shift();
-        context.data.hl2.shift();
-        context.data.hlc3.shift();
-        context.data.ohlc4.shift();
-        context.data.openTime.shift();
+        // Also remove from context.data arrays (last element = most recent in forward array)
+        context.data.close.pop();
+        context.data.open.pop();
+        context.data.high.pop();
+        context.data.low.pop();
+        context.data.volume.pop();
+        context.data.hl2.pop();
+        context.data.hlc3.pop();
+        context.data.ohlc4.pop();
+        context.data.openTime.pop();
         if (context.data.closeTime) {
-            context.data.closeTime.shift();
+            context.data.closeTime.pop();
         }
     }
 
@@ -437,15 +437,15 @@ export class PineTS {
         for (let i = startIdx; i < endIdx; i++) {
             context.idx = i;
 
-            context.data.close.unshift(this.close[i]);
-            context.data.open.unshift(this.open[i]);
-            context.data.high.unshift(this.high[i]);
-            context.data.low.unshift(this.low[i]);
-            context.data.volume.unshift(this.volume[i]);
-            context.data.hl2.unshift(this.hl2[i]);
-            context.data.hlc3.unshift(this.hlc3[i]);
-            context.data.ohlc4.unshift(this.ohlc4[i]);
-            context.data.openTime.unshift(this.openTime[i]);
+            context.data.close.push(this.close[i]);
+            context.data.open.push(this.open[i]);
+            context.data.high.push(this.high[i]);
+            context.data.low.push(this.low[i]);
+            context.data.volume.push(this.volume[i]);
+            context.data.hl2.push(this.hl2[i]);
+            context.data.hlc3.push(this.hlc3[i]);
+            context.data.ohlc4.push(this.ohlc4[i]);
+            context.data.openTime.push(this.openTime[i]);
 
             const result = await transpiledFn(context);
 
@@ -459,7 +459,7 @@ export class PineTS {
                         context.result[key] = [];
                     }
 
-                    const val = Array.isArray(result[key]) ? result[key][0] : result[key];
+                    const val = Array.isArray(result[key]) ? result[key][result[key].length - 1] : result[key];
                     context.result[key].push(val);
                 }
             } else {
@@ -474,9 +474,10 @@ export class PineTS {
             for (let ctxVarName of contextVarNames) {
                 for (let key in context[ctxVarName]) {
                     if (Array.isArray(context[ctxVarName][key])) {
-                        const val = context[ctxVarName][key][0];
+                        const arr = context[ctxVarName][key];
+                        const val = arr[arr.length - 1];
 
-                        context[ctxVarName][key].unshift(val);
+                        arr.push(val);
                     } else {
                         //console.error('>>> invalid entry format, should be an array: ', ctxVarName, key);
                     }

@@ -5,11 +5,14 @@ export function param(context: any) {
         if (!context.params[name]) context.params[name] = [];
         if (Array.isArray(source)) {
             if (index) {
-                context.params[name] = source.slice(index);
+                // Forward array lookback
+                context.params[name] = source.slice(0, source.length - index);
             } else {
                 context.params[name] = source.slice(0);
             }
-            return [source[index], name];
+            // Return current value (adjusted for lookback)
+            const val = source[source.length - 1 - (index || 0)];
+            return [val, name];
         } else {
             context.params[name][0] = source;
             return [source, name];

@@ -16,9 +16,8 @@ export function pivotlow(context: any) {
         const leftbars = Array.isArray(_leftbars) ? _leftbars[0] : _leftbars;
         const rightbars = Array.isArray(_rightbars) ? _rightbars[0] : _rightbars;
 
-        const result = pivotlowUtil(source.slice(0).reverse(), leftbars, rightbars);
+        const result = pivotlowUtil(source.slice(0), leftbars, rightbars);
         const idx = context.idx;
         return context.precision(result[idx]);
     };
 }
-

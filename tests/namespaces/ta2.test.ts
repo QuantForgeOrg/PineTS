@@ -276,15 +276,67 @@ describe('Technical Analysis Functions - Unit Tests', () => {
     });
 
     it('LINREG - Linear Regression', async () => {
-        const result = await runTAFunctionWithArgs('linreg', 'close', 14, 0);
+        const pineTS = new PineTS(Provider.Binance, 'BTCUSDC', 'D', null, new Date('2025-01-01').getTime(), new Date('2025-11-20').getTime());
 
-        const part = result.values.reverse().slice(0, 10);
-        const expected = [
-            98005.0591428571, 98179.7585714285, 98332.8711428571, 98366.11, 98375.5525714285, 98395.4142857142, 98352.5834285714, 98356.0537142857,
-            98351.7985714286, 98367.4022857142,
-        ];
-        console.log(' LINREG ', part);
-        expect(part).toEqual(arrayPrecision(expected));
+        const sourceCode = (context: Context) => {
+            const { low, open, close } = context.data;
+            const ta = context.ta;
+            const { plot, plotchar } = context.core;
+
+            const source = close;
+            const data = ta.linreg(source, 14, 0);
+            plotchar(data, 'data');
+            const _low = low[0];
+            const _open = open[0];
+            return { data, _low, _open };
+        };
+
+        const { result, plots } = await pineTS.run(sourceCode);
+
+        let plotdata = plots['data'].data;
+        for (let i = 0; i < plotdata.length; i++) {
+            plotdata[i].strtime = new Date(plotdata[i].time).toISOString().slice(0, -1) + '-00:00';
+            plotdata[i]._low = result._low[i];
+            plotdata[i]._open = result._open[i];
+            delete plotdata[i].options;
+        }
+        //remove everything before 2025-01-01
+        plotdata = plotdata.filter((e) => e.time >= new Date('2025-10-29').getTime());
+        // plotdata.forEach((e) => {
+        //     e.time = new Date(e.time).toISOString().slice(0, -1) + '-00:00';
+
+        //     delete e.options;
+        // });
+        const plotdata_str = plotdata.map((e) => `[${e.strtime}]: ${e.value}`).join('\n');
+
+        const expected_plot = `[2025-10-29T00:00:00.000-00:00]: 113175.3751428571
+[2025-10-30T00:00:00.000-00:00]: 112440.6711428571
+[2025-10-31T00:00:00.000-00:00]: 111778.1685714285
+[2025-11-01T00:00:00.000-00:00]: 111260.0702857142
+[2025-11-02T00:00:00.000-00:00]: 110994.7348571428
+[2025-11-03T00:00:00.000-00:00]: 109924.2577142857
+[2025-11-04T00:00:00.000-00:00]: 107344.2914285714
+[2025-11-05T00:00:00.000-00:00]: 105469.2982857142
+[2025-11-06T00:00:00.000-00:00]: 103396.9908571429
+[2025-11-07T00:00:00.000-00:00]: 102217.4028571428
+[2025-11-08T00:00:00.000-00:00]: 101091.2094285714
+[2025-11-09T00:00:00.000-00:00]: 101268.6994285714
+[2025-11-10T00:00:00.000-00:00]: 101993.0222857143
+[2025-11-11T00:00:00.000-00:00]: 102016.582
+[2025-11-12T00:00:00.000-00:00]: 101558.4008571428
+[2025-11-13T00:00:00.000-00:00]: 100575.9465714286
+[2025-11-14T00:00:00.000-00:00]: 98705.602
+[2025-11-15T00:00:00.000-00:00]: 97600.4637142857
+[2025-11-16T00:00:00.000-00:00]: 96630.914
+[2025-11-17T00:00:00.000-00:00]: 95025.2428571428
+[2025-11-18T00:00:00.000-00:00]: 93314.7128571428
+[2025-11-19T00:00:00.000-00:00]: 91819.8711428571
+[2025-11-20T00:00:00.000-00:00]: 89043.0148571429`;
+
+        console.log('expected_plot', expected_plot);
+        console.log('plotdata_str', plotdata_str);
+
+        expect(plotdata_str.trim()).toEqual(expected_plot.trim());
     });
 
     it('SUPERTREND - Supertrend Indicator', async () => {
@@ -330,6 +382,7 @@ describe('Technical Analysis Functions - Unit Tests', () => {
         };
 
         const { result, plots } = await pineTS.run(sourceCode);
+        console.log('result', result);
 
         const plotdata = plots['crossover'].data;
 

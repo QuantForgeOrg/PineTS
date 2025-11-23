@@ -19,9 +19,9 @@ export function supertrend(context: any) {
         }
 
         const state = context.taState[stateKey];
-        const high = context.data.high[0];
-        const low = context.data.low[0];
-        const close = context.data.close[0];
+        const high = context.data.high[context.data.high.length - 1];
+        const low = context.data.low[context.data.low.length - 1];
+        const close = context.data.close[context.data.close.length - 1];
 
         // Get ATR value (already optimized) - use derived call ID
         const atrValue = context.ta.atr(atrPeriod, _callId ? `${_callId}_atr` : undefined);
@@ -36,13 +36,14 @@ export function supertrend(context: any) {
 
         // Adjust bands based on previous values
         if (state.prevUpperBand !== null) {
-            if (upperBand < state.prevUpperBand || context.data.close[1] > state.prevUpperBand) {
+            const prevClose = context.data.close[context.data.close.length - 2];
+            if (upperBand < state.prevUpperBand || prevClose > state.prevUpperBand) {
                 upperBand = upperBand;
             } else {
                 upperBand = state.prevUpperBand;
             }
 
-            if (lowerBand > state.prevLowerBand || context.data.close[1] < state.prevLowerBand) {
+            if (lowerBand > state.prevLowerBand || prevClose < state.prevLowerBand) {
                 lowerBand = lowerBand;
             } else {
                 lowerBand = state.prevLowerBand;

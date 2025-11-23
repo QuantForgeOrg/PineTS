@@ -2,7 +2,7 @@
 
 export function log(context: any) {
     return (source: number[]) => {
-        return Math.log(source[0]);
+        return Math.log(source[source.length - 1]);
     };
 }
 

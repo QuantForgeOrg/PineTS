@@ -13,8 +13,8 @@ export function vwma(context: any) {
         }
 
         const state = context.taState[stateKey];
-        const currentValue = source[0];
-        const currentVolume = context.data.volume[0];
+        const currentValue = source[source.length - 1];
+        const currentVolume = context.data.volume[context.data.volume.length - 1];
 
         state.window.unshift(currentValue);
         state.volumeWindow.unshift(currentVolume);

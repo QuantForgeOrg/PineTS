@@ -18,9 +18,9 @@ export function atr(context: any) {
         }
 
         const state = context.taState[stateKey];
-        const high = context.data.high[0];
-        const low = context.data.low[0];
-        const close = context.data.close[0];
+        const high = context.data.high[context.data.high.length - 1];
+        const low = context.data.low[context.data.low.length - 1];
+        const close = context.data.close[context.data.close.length - 1];
 
         // Calculate True Range
         let tr;
@@ -54,4 +54,3 @@ export function atr(context: any) {
         return context.precision(atr);
     };
 }
-

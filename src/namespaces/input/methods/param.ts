@@ -3,7 +3,9 @@
 export function param(context: any) {
     return (source: any, index: number = 0) => {
         if (Array.isArray(source)) {
-            return [source[index]];
+            // Forward array: return current value (last element)
+            // adjusting for index lookback if any
+            return [source[source.length - 1 - index]];
         }
         return [source];
     };

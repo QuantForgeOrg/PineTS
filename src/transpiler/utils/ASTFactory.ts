@@ -51,6 +51,18 @@ export const ASTFactory = {
         return this.createMemberExpression(object, indexNode, true);
     },
 
+    createLastElementAccess(object: any): any {
+        // object[object.length - 1]
+        const length = this.createMemberExpression(object, this.createIdentifier('length'), false);
+        const index = {
+            type: 'BinaryExpression',
+            operator: '-',
+            left: length,
+            right: this.createLiteral(1),
+        };
+        return this.createMemberExpression(object, index, true);
+    },
+
     createCallExpression(callee: any, args: any[]): any {
         return {
             type: 'CallExpression',

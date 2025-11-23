@@ -108,7 +108,7 @@ export class Context {
     init(trg, src: any, idx: number = 0) {
         if (!trg) {
             if (Array.isArray(src)) {
-                trg = [this.precision(src[src.length - this.idx - 1 + idx])];
+                trg = [this.precision(src[src.length - 1 + idx])];
             } else {
                 trg = [this.precision(src)];
             }
@@ -116,9 +116,9 @@ export class Context {
             if (!Array.isArray(src) || Array.isArray(src[0])) {
                 //here we check that this is not a 2D array, in which case we consider it an array of values
                 //this is important for handling TA functions that return tupples or series of tuples
-                trg[0] = Array.isArray(src?.[0]) ? src[0] : this.precision(src);
+                trg[trg.length - 1] = Array.isArray(src?.[0]) ? src[0] : this.precision(src);
             } else {
-                trg[0] = this.precision(src[src.length - this.idx - 1 + idx]);
+                trg[trg.length - 1] = this.precision(src[src.length - 1 + idx]);
             }
         }
 
@@ -152,10 +152,12 @@ export class Context {
         if (!this.params[name]) this.params[name] = [];
         if (Array.isArray(source)) {
             if (index) {
-                this.params[name] = source.slice(index);
-                this.params[name].length = source.length; //ensure length is correct
+                // Forward array lookback: slice from 0 to length-index
+                // This effectively shifts the series so the end is at 'index' bars ago
+                this.params[name] = source.slice(0, source.length - index);
                 return this.params[name];
             }
+            // No lookback: clone the array (or pass reference? slice(0) clones)
             this.params[name] = source.slice(0);
             return this.params[name];
         } else {

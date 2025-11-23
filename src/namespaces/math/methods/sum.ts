@@ -2,9 +2,11 @@
 
 export function sum(context: any) {
     return (source: number[], length: number) => {
-        const len = Array.isArray(length) ? length[0] : length;
+        const len = Array.isArray(length) ? length[length.length - 1] : length;
         if (Array.isArray(source)) {
-            return source.slice(0, len).reduce((a, b) => a + b, 0);
+            // slice(-len) extracts the last 'len' elements
+            // If len is larger than array length, it takes the whole array, which matches Pine behavior mostly
+            return source.slice(-len).reduce((a, b) => a + b, 0);
         }
         return source;
     };

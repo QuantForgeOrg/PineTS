@@ -13,7 +13,7 @@ export function sma(context: any) {
         }
 
         const state = context.taState[stateKey];
-        const currentValue = source[0] || 0;
+        const currentValue = source[source.length - 1] || 0;
 
         // Add current value to window
         state.window.unshift(currentValue);

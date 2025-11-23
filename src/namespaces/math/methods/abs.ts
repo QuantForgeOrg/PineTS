@@ -2,7 +2,6 @@
 
 export function abs(context: any) {
     return (source: number[]) => {
-        return Math.abs(source[0]);
+        return Math.abs(source[source.length - 1]);
     };
 }
-

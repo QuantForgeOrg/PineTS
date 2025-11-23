@@ -2,7 +2,7 @@
 
 export function floor(context: any) {
     return (source: number[]) => {
-        return Math.floor(source[0]);
+        return Math.floor(source[source.length - 1]);
     };
 }
 

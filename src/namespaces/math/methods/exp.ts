@@ -2,7 +2,7 @@
 
 export function exp(context: any) {
     return (source: number[]) => {
-        return Math.exp(source[0]);
+        return Math.exp(source[source.length - 1]);
     };
 }
 

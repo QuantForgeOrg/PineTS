@@ -2,7 +2,7 @@
 
 export function sin(context: any) {
     return (source: number[]) => {
-        return Math.sin(source[0]);
+        return Math.sin(source[source.length - 1]);
     };
 }
 

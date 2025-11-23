@@ -2,7 +2,7 @@
 
 export function round(context: any) {
     return (source: number[]) => {
-        return Math.round(source[0]);
+        return Math.round(source[source.length - 1]);
     };
 }
 

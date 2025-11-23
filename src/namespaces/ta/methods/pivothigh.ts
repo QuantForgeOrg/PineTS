@@ -15,9 +15,8 @@ export function pivothigh(context: any) {
         const leftbars = Array.isArray(_leftbars) ? _leftbars[0] : _leftbars;
         const rightbars = Array.isArray(_rightbars) ? _rightbars[0] : _rightbars;
 
-        const result = pivothighUtil(source.slice(0).reverse(), leftbars, rightbars);
+        const result = pivothighUtil(source.slice(0), leftbars, rightbars);
         const idx = context.idx;
         return context.precision(result[idx]);
     };
 }
-

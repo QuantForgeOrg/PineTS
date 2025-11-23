@@ -4,7 +4,32 @@ import { Provider } from '@pinets/index';
 import PineTS from 'PineTS.class';
 
 describe('Array', () => {
-    it('SET, AVG, VARIANCE', async () => {
+    it('AVG Alone', async () => {
+        const pineTS = new PineTS(Provider.Binance, 'BTCUSDT', 'W', 500, 0, new Date('Jan 20 2025').getTime() - 1);
+
+        const { result } = await pineTS.run((context) => {
+            const ta = context.ta;
+            const array = context.array;
+            const { close } = context.data;
+
+            const arr = array.new(10, close);
+
+            array.set(arr, 1, 99);
+
+            const avg = array.avg(arr);
+            return {
+                avg,
+            };
+        });
+
+        const part_avg = result.avg.reverse().slice(0, 5);
+
+        const expected_avg = [91208.313, 85100.454, 88537.149, 84374.28, 85677.543];
+
+        expect(part_avg).toEqual(expected_avg);
+    });
+
+    it('SET+AVG+ARIANCE', async () => {
         const pineTS = new PineTS(Provider.Binance, 'BTCUSDT', 'W', 500, 0, new Date('Jan 20 2025').getTime() - 1);
 
         const { result } = await pineTS.run((context) => {

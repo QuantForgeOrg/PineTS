@@ -13,7 +13,7 @@ export function rma(context: any) {
         }
 
         const state = context.taState[stateKey];
-        const currentValue = source[0] || 0;
+        const currentValue = source[source.length - 1] || 0;
 
         if (state.initCount < period) {
             // Accumulate for SMA initialization

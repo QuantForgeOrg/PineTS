@@ -34,8 +34,8 @@ export function security(context: any) {
             return _expression;
         }
 
-        const myOpenTime = context.data.openTime[0];
-        const myCloseTime = context.data.closeTime[0];
+        const myOpenTime = context.data.openTime[context.data.openTime.length - 1];
+        const myCloseTime = context.data.closeTime[context.data.closeTime.length - 1];
 
         if (context.cache[_expression_name]) {
             const secContext = context.cache[_expression_name];

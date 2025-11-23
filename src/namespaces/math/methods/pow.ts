@@ -2,7 +2,9 @@
 
 export function pow(context: any) {
     return (source: number[], power: number[]) => {
-        return Math.pow(source[0], power[0]);
+        const val = Array.isArray(source) ? source[source.length - 1] : source;
+        const pow = Array.isArray(power) ? power[power.length - 1] : power;
+        return Math.pow(val, pow);
     };
 }
 

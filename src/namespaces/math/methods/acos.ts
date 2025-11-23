@@ -2,7 +2,7 @@
 
 export function acos(context: any) {
     return (source: number[]) => {
-        return Math.acos(source[0]);
+        return Math.acos(source[source.length - 1]);
     };
 }
 

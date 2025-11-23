@@ -13,7 +13,7 @@ export function dev(context: any) {
         }
 
         const state = context.taState[stateKey];
-        const currentValue = source[0] || 0;
+        const currentValue = source[source.length - 1] || 0;
 
         state.window.unshift(currentValue);
         state.sum += currentValue;
@@ -37,4 +37,3 @@ export function dev(context: any) {
         return context.precision(dev);
     };
 }
-

@@ -2,7 +2,7 @@
 
 export function tan(context: any) {
     return (source: number[]) => {
-        return Math.tan(source[0]);
+        return Math.tan(source[source.length - 1]);
     };
 }
 

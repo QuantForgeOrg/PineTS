@@ -2,8 +2,7 @@
 
 export function min(context: any) {
     return (...source: number[]) => {
-        const arg = source.map((e) => (Array.isArray(e) ? e[0] : e));
+        const arg = source.map((e) => (Array.isArray(e) ? e[e.length - 1] : e));
         return Math.min(...arg);
     };
 }
-

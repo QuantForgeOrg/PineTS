@@ -2,7 +2,7 @@
 
 export function sqrt(context: any) {
     return (source: number[]) => {
-        return Math.sqrt(source[0]);
+        return Math.sqrt(source[source.length - 1]);
     };
 }
 

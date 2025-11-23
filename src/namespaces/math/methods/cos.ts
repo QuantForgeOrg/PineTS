@@ -2,7 +2,7 @@
 
 export function cos(context: any) {
     return (source: number[]) => {
-        return Math.cos(source[0]);
+        return Math.cos(source[source.length - 1]);
     };
 }
 

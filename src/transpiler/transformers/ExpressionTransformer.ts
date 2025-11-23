@@ -24,8 +24,8 @@ export function transformArrayIndex(node: any, scopeManager: ScopeManager): void
             // Transform property to $.kind.scopedName
             node.property = ASTFactory.createContextVariableReference(kind, scopedName);
 
-            // Add [0] to the index: $.kind.scopedName[0]
-            node.property = ASTFactory.createArrayAccess(node.property, 0);
+            // Add [length - 1] to the index: $.kind.scopedName[$.kind.scopedName.length - 1]
+            node.property = ASTFactory.createLastElementAccess(node.property);
         }
     }
 
@@ -52,10 +52,7 @@ export function transformArrayIndex(node: any, scopeManager: ScopeManager): void
 }
 
 export function addArrayAccess(node: any, scopeManager: ScopeManager): void {
-    const memberExpr = ASTFactory.createArrayAccess(
-        ASTFactory.createIdentifier(node.name), // We need to preserve start/end? ASTFactory doesn't currently.
-        0
-    );
+    const memberExpr = ASTFactory.createLastElementAccess(ASTFactory.createIdentifier(node.name));
     // Preserve location info if available
     if (node.start !== undefined) memberExpr.object.start = node.start;
     if (node.end !== undefined) memberExpr.object.end = node.end;
@@ -149,8 +146,8 @@ export function transformIdentifier(node: any, scopeManager: ScopeManager): void
         const hasArrayAccess = node.parent && node.parent.type === 'MemberExpression' && node.parent.computed && node.parent.object === node;
 
         if (!hasArrayAccess && !isArrayAccess) {
-            // Add [0] array access if not already present and not part of array access
-            const accessExpr = ASTFactory.createArrayAccess(memberExpr, 0);
+            // Add [length - 1] array access if not already present and not part of array access
+            const accessExpr = ASTFactory.createLastElementAccess(memberExpr);
             Object.assign(node, accessExpr);
         } else {
             // Just replace with the member expression without adding array access
@@ -245,7 +242,7 @@ function transformOperand(node: any, scopeManager: ScopeManager, namespace: stri
             }
             const transformedObject = transformIdentifierForParam(node, scopeManager);
 
-            return ASTFactory.createArrayAccess(transformedObject, 0);
+            return ASTFactory.createLastElementAccess(transformedObject);
         }
         case 'UnaryExpression': {
             return getParamFromUnaryExpression(node, scopeManager, namespace);

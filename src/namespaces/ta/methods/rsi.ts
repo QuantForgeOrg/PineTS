@@ -19,7 +19,7 @@ export function rsi(context: any) {
         }
 
         const state = context.taState[stateKey];
-        const currentValue = source[0];
+        const currentValue = source[source.length - 1];
 
         // Calculate gain/loss from previous value
         if (state.prevValue !== null) {
@@ -60,4 +60,3 @@ export function rsi(context: any) {
         return NaN;
     };
 }
-

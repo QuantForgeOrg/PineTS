@@ -13,7 +13,7 @@ export function lowest(context: any) {
         }
 
         const state = context.taState[stateKey];
-        const currentValue = source[0];
+        const currentValue = source[source.length - 1];
 
         state.window.unshift(currentValue);
 
@@ -30,4 +30,3 @@ export function lowest(context: any) {
         return context.precision(min);
     };
 }
-

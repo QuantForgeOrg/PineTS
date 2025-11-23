@@ -2,7 +2,7 @@
 
 export function atan(context: any) {
     return (source: number[]) => {
-        return Math.atan(source[0]);
+        return Math.atan(source[source.length - 1]);
     };
 }
 

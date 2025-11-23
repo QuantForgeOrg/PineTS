@@ -14,7 +14,7 @@ export function linreg(context: any) {
         }
 
         const state = context.taState[stateKey];
-        const currentValue = source[0];
+        const currentValue = source[source.length - 1];
 
         state.window.unshift(currentValue);
 
@@ -57,4 +57,3 @@ export function linreg(context: any) {
         return context.precision(linRegValue);
     };
 }
-

@@ -2,7 +2,7 @@
 
 export function asin(context: any) {
     return (source: number[]) => {
-        return Math.asin(source[0]);
+        return Math.asin(source[source.length - 1]);
     };
 }
 

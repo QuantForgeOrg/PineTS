@@ -12,7 +12,7 @@ describe('Indicators', () => {
         const { result, plots } = await pineTS.run((context: Context) => {
             // This is a port of "Squeeze Momentum Indicator" indicator by LazyBear
             // List of all his indicators: https://www.tradingview.com/v/4IneGo8h/
-            const { close, high, low } = context.data;
+            const { close, high, low, open } = context.data;
 
             const ta = context.ta;
             const math = context.math;
@@ -59,7 +59,7 @@ describe('Indicators', () => {
             const ta_highest = ta.highest(high, lengthKC);
             const ta_sma = ta.sma(close, lengthKC);
             const ta_avg = math.avg(math.avg(ta_highest, ta_lowest), ta_sma);
-            const val = source - ta_avg;
+            const val = ta.linreg(source - ta_avg, 14, 0);
 
             plotchar(ta_lowest, 'ta_lowest');
             //console.log('>>> ', ta_lowest + ' | ' + ta_highest + ' | ' + ta_sma + ' | ' + ta_avg + ' | ' + val);
