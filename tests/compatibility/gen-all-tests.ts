@@ -21,7 +21,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Configure which namespace folders to check
-const namespaceFolders = ['namespace/ta', 'namespace/math', 'namespace/array'];
+const namespaceFolders = ['namespace/ta', 'namespace/math', 'namespace/array', 'misc'];
 
 interface IndicatorInfo {
     indicatorPath: string;

@@ -31,7 +31,7 @@ describe('ARRAY Namespace - RANGE Method', () => {
             
                 const val1 = array.get(arr1, 2);
                 const val2 = array.get(arr2, 3);
-                
+            
                 plotchar(val1, '_plotchar');
                 plot(val2, '_plot');
             

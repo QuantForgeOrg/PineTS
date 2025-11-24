@@ -25,7 +25,7 @@ describe('ARRAY Namespace - GET Method', () => {
                 const get_first = array.get(arr1, 0);
                 const get_middle = array.get(arr1, 2);
                 const get_last = array.get(arr1, 4);
-                
+            
                 plotchar(get_first, '_plotchar');
                 plot(get_last, '_plot');
             

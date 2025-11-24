@@ -29,7 +29,7 @@ describe('ARRAY Namespace - REMOVE Method', () => {
             
                 const size1 = array.size(arr1);
                 const size2 = array.size(arr2);
-                
+            
                 plotchar(removed1, '_plotchar');
                 plot(removed2, '_plot');
             

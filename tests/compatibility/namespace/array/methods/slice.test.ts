@@ -27,7 +27,7 @@ describe('ARRAY Namespace - SLICE Method', () => {
             
                 const val1 = array.get(sliced1, 0);
                 const val2 = array.get(sliced2, 0);
-                
+            
                 plotchar(val1, '_plotchar');
                 plot(val2, '_plot');
             

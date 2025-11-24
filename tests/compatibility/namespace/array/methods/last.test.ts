@@ -26,7 +26,7 @@ describe('ARRAY Namespace - LAST Method', () => {
             
                 const last1 = array.last(arr1);
                 const last2 = array.last(arr2);
-                
+            
                 plotchar(last1, '_plotchar');
                 plot(last2, '_plot');
             

@@ -22,7 +22,7 @@ describe('ARRAY Namespace - INCLUDES Method', () => {
             
                 const includes1 = array.includes(arr1, 20);
                 const includes2 = array.includes(arr1, 999);
-                
+            
                 plotchar(includes1, '_plotchar');
                 plot(includes2, '_plot');
             

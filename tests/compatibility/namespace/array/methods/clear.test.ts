@@ -29,7 +29,7 @@ describe('ARRAY Namespace - CLEAR Method', () => {
                 const size_before2 = array.size(arr2);
                 array.clear(arr2);
                 const size_after2 = array.size(arr2);
-                
+            
                 plotchar(size_before1, '_plotchar');
                 plot(size_before2, '_plot');
             

@@ -22,7 +22,7 @@ describe('ARRAY Namespace - SET Method', () => {
             
                 const val1 = array.get(arr1, 0);
                 const val2 = array.get(arr1, 2);
-                
+            
                 plotchar(val1, '_plotchar');
                 plot(val2, '_plot');
             

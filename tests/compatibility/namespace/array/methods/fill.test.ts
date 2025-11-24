@@ -17,13 +17,13 @@ describe('ARRAY Namespace - FILL Method', () => {
             
                 const arr1 = array.new(5, 10);
                 const arr2 = array.new(4, 20);
-                
+            
                 array.fill(arr1, 99);
                 array.fill(arr2, 88);
             
                 const val1 = array.get(arr1, 2);
                 const val2 = array.get(arr2, 3);
-                
+            
                 plotchar(val1, '_plotchar');
                 plot(val2, '_plot');
             

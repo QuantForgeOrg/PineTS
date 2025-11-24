@@ -26,7 +26,7 @@ describe('ARRAY Namespace - UNSHIFT Method', () => {
             
                 const size1 = array.size(arr1);
                 const size2 = array.size(arr2);
-                
+            
                 plotchar(size1, '_plotchar');
                 plot(size2, '_plot');
             

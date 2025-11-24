@@ -23,7 +23,7 @@ describe('ARRAY Namespace - LASTINDEXOF Method', () => {
             
                 const index1 = array.lastindexof(arr1, 20);
                 const index2 = array.lastindexof(arr1, 999);
-                
+            
                 plotchar(index1, '_plotchar');
                 plot(index2, '_plot');
             

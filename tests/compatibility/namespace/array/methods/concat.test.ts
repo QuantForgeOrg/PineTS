@@ -27,7 +27,7 @@ describe('ARRAY Namespace - CONCAT Method', () => {
             
                 const val1 = array.get(concatenated, 0);
                 const val2 = array.get(concatenated, 2);
-                
+            
                 plotchar(val1, '_plotchar');
                 plot(val2, '_plot');
             

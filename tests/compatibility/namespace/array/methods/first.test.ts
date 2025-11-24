@@ -26,7 +26,7 @@ describe('ARRAY Namespace - FIRST Method', () => {
             
                 const first1 = array.first(arr1);
                 const first2 = array.first(arr2);
-                
+            
                 plotchar(first1, '_plotchar');
                 plot(first2, '_plot');
             

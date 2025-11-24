@@ -26,10 +26,10 @@ describe('ARRAY Namespace - POP Method', () => {
                 const arr2 = array.new(0);
                 array.push(arr2, 100);
                 array.push(arr2, 200);
-                
+            
                 const popped2 = array.pop(arr2);
                 const size_after2 = array.size(arr2);
-                
+            
                 plotchar(popped1, '_plotchar');
                 plot(popped2, '_plot');
             

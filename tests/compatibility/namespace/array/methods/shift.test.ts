@@ -26,10 +26,10 @@ describe('ARRAY Namespace - SHIFT Method', () => {
                 const arr2 = array.new(0);
                 array.push(arr2, 100);
                 array.push(arr2, 200);
-                
+            
                 const shifted2 = array.shift(arr2);
                 const size_after2 = array.size(arr2);
-                
+            
                 plotchar(shifted1, '_plotchar');
                 plot(shifted2, '_plot');
             

@@ -23,7 +23,7 @@ describe('ARRAY Namespace - INDEXOF Method', () => {
             
                 const index1 = array.indexof(arr1, 20);
                 const index2 = array.indexof(arr1, 999);
-                
+            
                 plotchar(index1, '_plotchar');
                 plot(index2, '_plot');
             
