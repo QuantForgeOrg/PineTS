@@ -4,7 +4,10 @@ export class Core {
     public color = {
         param: (source, index = 0) => {
             if (Array.isArray(source)) {
-                return source[index];
+                // Forward array: last element is current.
+                // index 0 = current (length-1)
+                // index 1 = previous (length-2)
+                return source[source.length - 1 - index];
             }
             return source;
         },
