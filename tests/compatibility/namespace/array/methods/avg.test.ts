@@ -12,22 +12,30 @@ describe('ARRAY Namespace - AVG Method', () => {
 
         const { result, plots } = await pineTS.run((context) => {
             const { close, open } = context.data;
-                            const array = context.array;
-                            const { plot, plotchar } = context.core;
-                        
-                            const arr1 = array.new(5, 10);
-                            const arr2 = array.new(5, 20);
-                            
-                            const avg_native = array.avg(arr1);
-                            const avg_var = array.avg(arr2);
-                        
-                            plotchar(avg_native, '_plotchar');
-                            plot(avg_var, '_plot');
-                        
-                            return {
-                                avg_native,
-                                avg_var,
-                            };
+                const array = context.array;
+                const { plot, plotchar } = context.core;
+            
+                const arr1 = array.new(0);
+                array.push(arr1, 10);
+                array.push(arr1, 20);
+                array.push(arr1, 30);
+            
+                const arr2 = array.new(0);
+                array.push(arr2, 100);
+                array.push(arr2, 200);
+                array.push(arr2, 300);
+                array.push(arr2, 400);
+            
+                const avg1 = array.avg(arr1);
+                const avg2 = array.avg(arr2);
+                
+                plotchar(avg1, '_plotchar');
+                plot(avg2, '_plot');
+            
+                return {
+                    avg1,
+                    avg2,
+                };
         });
 
         // Filter results for the date range 2025-10-01 to 2025-11-20

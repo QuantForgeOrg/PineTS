@@ -1,19 +1,25 @@
 (context) => {
-            const { close, open } = context.data;
-                const array = context.array;
-                const { plot, plotchar } = context.core;
-            
-                const arr1 = array.new(5, 10);
-                const arr2 = array.new(5, 20);
-                
-                const first_native = array.first(arr1);
-                const first_var = array.first(arr2);
-            
-                plotchar(first_native, '_plotchar');
-                plot(first_var, '_plot');
-            
-                return {
-                    first_native,
-                    first_var,
-                };
+    const { close, open } = context.data;
+    const array = context.array;
+    const { plot, plotchar } = context.core;
+
+    const arr1 = array.new(0);
+    array.push(arr1, 10);
+    array.push(arr1, 20);
+    array.push(arr1, 30);
+
+    const arr2 = array.new(0);
+    array.push(arr2, 100);
+    array.push(arr2, 200);
+
+    const first1 = array.first(arr1);
+    const first2 = array.first(arr2);
+
+    plotchar(first1, '_plotchar');
+    plot(first2, '_plot');
+
+    return {
+        first1,
+        first2,
+    };
 };

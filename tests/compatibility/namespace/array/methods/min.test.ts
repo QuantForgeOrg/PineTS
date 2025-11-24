@@ -12,22 +12,30 @@ describe('ARRAY Namespace - MIN Method', () => {
 
         const { result, plots } = await pineTS.run((context) => {
             const { close, open } = context.data;
-                            const array = context.array;
-                            const { plot, plotchar } = context.core;
-                        
-                            const arr1 = array.new(5, 10);
-                            const arr2 = array.new(5, 20);
-                            
-                            const min_native = array.min(arr1);
-                            const min_var = array.min(arr2);
-                        
-                            plotchar(min_native, '_plotchar');
-                            plot(min_var, '_plot');
-                        
-                            return {
-                                min_native,
-                                min_var,
-                            };
+                const array = context.array;
+                const { plot, plotchar } = context.core;
+            
+                const arr1 = array.new(0);
+                array.push(arr1, 10);
+                array.push(arr1, 50);
+                array.push(arr1, 30);
+            
+                const arr2 = array.new(0);
+                array.push(arr2, 100);
+                array.push(arr2, 200);
+                array.push(arr2, 150);
+                array.push(arr2, 250);
+            
+                const min1 = array.min(arr1);
+                const min2 = array.min(arr2);
+                
+                plotchar(min1, '_plotchar');
+                plot(min2, '_plot');
+            
+                return {
+                    min1,
+                    min2,
+                };
         });
 
         // Filter results for the date range 2025-10-01 to 2025-11-20
