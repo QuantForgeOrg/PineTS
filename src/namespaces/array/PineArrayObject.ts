@@ -2,5 +2,7 @@
 
 export class PineArrayObject {
     constructor(public array: any) {}
+    toString(): string {
+        return 'PineArrayObject:' + this.array.toString();
+    }
 }
-

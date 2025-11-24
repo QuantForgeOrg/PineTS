@@ -12,22 +12,33 @@ describe('ARRAY Namespace - LASTINDEXOF Method', () => {
 
         const { result, plots } = await pineTS.run((context) => {
             const { close, open } = context.data;
-                            const array = context.array;
-                            const { plot, plotchar } = context.core;
-                        
-                            const arr1 = array.new(5, 10);
-                            const arr2 = array.new(5, 20);
-                            
-                            const lastindexof_native = array.lastindexof(arr1, 10);
-                            const lastindexof_var = array.lastindexof(arr2, 20);
-                        
-                            plotchar(lastindexof_native, '_plotchar');
-                            plot(lastindexof_var, '_plot');
-                        
-                            return {
-                                lastindexof_native,
-                                lastindexof_var,
-                            };
+                const array = context.array;
+                const { plot, plotchar } = context.core;
+            
+                const arr1 = array.new(0);
+                array.push(arr1, 10);
+                array.push(arr1, 20);
+                array.push(arr1, 30);
+                array.push(arr1, 20);
+            
+                const index1 = array.lastindexof(arr1, 20);
+                const index2 = array.lastindexof(arr1, 999);
+                
+                plotchar(index1, '_plotchar');
+                plot(index2, '_plot');
+            
+                const arr2 = array.new(0);
+                array.push(arr2, 100);
+                array.push(arr2, 200);
+                array.push(arr2, 100);
+            
+                const index3 = array.lastindexof(arr2, 100);
+            
+                return {
+                    index1,
+                    index2,
+                    index3,
+                };
         });
 
         // Filter results for the date range 2025-10-01 to 2025-11-20

@@ -12,25 +12,25 @@ describe('ARRAY Namespace - NEW Method', () => {
 
         const { result, plots } = await pineTS.run((context) => {
             const { close, open } = context.data;
-                        const array = context.array;
-                        const { plot, plotchar } = context.core;
+                const array = context.array;
+                const { plot, plotchar } = context.core;
             
-                    const arr1 = array.new(5, 10);
-                    const arr2 = array.new(3, 20);
+                const arr1 = array.new(5, 100);
+                const arr2 = array.new(3, 200);
             
-                    const size1 = array.size(arr1);
-                    const size2 = array.size(arr2);
-                    
-                    plotchar(size1, '_plotchar');
-                    plot(size2, '_plot');
+                const size1 = array.size(arr1);
+                const size2 = array.size(arr2);
+                
+                plotchar(size1, '_plotchar');
+                plot(size2, '_plot');
             
-                    const new_native = arr1.array;
-                    const new_var = arr2.array;
+                const new_value1 = array.get(arr1, 0);
+                const new_value2 = array.get(arr2, 2);
             
-                        return {
-                            new_native,
-                            new_var,
-                        };
+                return {
+                    new_value1,
+                    new_value2,
+                };
         });
 
         // Filter results for the date range 2025-10-01 to 2025-11-20

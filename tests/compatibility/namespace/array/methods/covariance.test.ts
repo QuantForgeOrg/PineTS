@@ -12,24 +12,38 @@ describe('ARRAY Namespace - COVARIANCE Method', () => {
 
         const { result, plots } = await pineTS.run((context) => {
             const { close, open } = context.data;
-                        const array = context.array;
-                        const { plot, plotchar } = context.core;
+                const array = context.array;
+                const { plot, plotchar } = context.core;
             
-                        const arr1 = array.new(5, 10);
-                        const arr2 = array.new(5, 20);
-                        const arr3 = array.new(5, 30);
-                        const arr4 = array.new(5, 40);
-                        
-                        const covariance_native = array.covariance(arr1, arr2);
-                        const covariance_var = array.covariance(arr3, arr4);
+                const arr1 = array.new(0);
+                array.push(arr1, 10);
+                array.push(arr1, 20);
+                array.push(arr1, 30);
             
-                        plotchar(covariance_native, '_plotchar');
-                        plot(covariance_var, '_plot');
+                const arr2 = array.new(0);
+                array.push(arr2, 5);
+                array.push(arr2, 15);
+                array.push(arr2, 25);
             
-                        return {
-                            covariance_native,
-                            covariance_var,
-                        };
+                const cov1 = array.covariance(arr1, arr2);
+                
+                plotchar(cov1, '_plotchar');
+                plot(cov1, '_plot');
+            
+                const arr3 = array.new(0);
+                array.push(arr3, 100);
+                array.push(arr3, 200);
+            
+                const arr4 = array.new(0);
+                array.push(arr4, 50);
+                array.push(arr4, 150);
+            
+                const cov2 = array.covariance(arr3, arr4);
+            
+                return {
+                    cov1,
+                    cov2,
+                };
         });
 
         // Filter results for the date range 2025-10-01 to 2025-11-20

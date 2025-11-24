@@ -12,22 +12,30 @@ describe('ARRAY Namespace - STDEV Method', () => {
 
         const { result, plots } = await pineTS.run((context) => {
             const { close, open } = context.data;
-                            const array = context.array;
-                            const { plot, plotchar } = context.core;
-                        
-                            const arr1 = array.new(5, 10);
-                            const arr2 = array.new(5, 20);
-                            
-                            const stdev_native = array.stdev(arr1);
-                            const stdev_var = array.stdev(arr2);
-                        
-                            plotchar(stdev_native, '_plotchar');
-                            plot(stdev_var, '_plot');
-                        
-                            return {
-                                stdev_native,
-                                stdev_var,
-                            };
+                const array = context.array;
+                const { plot, plotchar } = context.core;
+            
+                const arr1 = array.new(0);
+                array.push(arr1, 10);
+                array.push(arr1, 20);
+                array.push(arr1, 30);
+                array.push(arr1, 40);
+            
+                const arr2 = array.new(0);
+                array.push(arr2, 100);
+                array.push(arr2, 200);
+                array.push(arr2, 300);
+            
+                const stdev1 = array.stdev(arr1);
+                const stdev2 = array.stdev(arr2);
+                
+                plotchar(stdev1, '_plotchar');
+                plot(stdev2, '_plot');
+            
+                return {
+                    stdev1,
+                    stdev2,
+                };
         });
 
         // Filter results for the date range 2025-10-01 to 2025-11-20

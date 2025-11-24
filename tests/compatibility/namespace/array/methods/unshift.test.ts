@@ -12,28 +12,31 @@ describe('ARRAY Namespace - UNSHIFT Method', () => {
 
         const { result, plots } = await pineTS.run((context) => {
             const { close, open } = context.data;
-                            const array = context.array;
-                            const { plot, plotchar } = context.core;
-                        
-                            const arr1 = array.new(5, 10);
-                            const arr2 = array.new(5, 20);
-                            
-                        array.unshift(arr1, 99);
-                        array.unshift(arr2, 88);
-                    
-                        const size1 = array.size(arr1);
-                        const size2 = array.size(arr2);
-                        
-                        plotchar(size1, '_plotchar');
-                        plot(size2, '_plot');
-                    
-                        const unshift_native = arr1.array;
-                        const unshift_var = arr2.array;
-                        
-                            return {
-                                unshift_native,
-                                unshift_var,
-                            };
+                const array = context.array;
+                const { plot, plotchar } = context.core;
+            
+                const arr1 = array.new(0);
+                array.push(arr1, 20);
+                array.push(arr1, 30);
+                array.unshift(arr1, 10);
+            
+                const arr2 = array.new(0);
+                array.push(arr2, 200);
+                array.unshift(arr2, 100);
+            
+                const size1 = array.size(arr1);
+                const size2 = array.size(arr2);
+                
+                plotchar(size1, '_plotchar');
+                plot(size2, '_plot');
+            
+                const unshift_first1 = array.get(arr1, 0);
+                const unshift_first2 = array.get(arr2, 0);
+            
+                return {
+                    unshift_first1,
+                    unshift_first2,
+                };
         });
 
         // Filter results for the date range 2025-10-01 to 2025-11-20

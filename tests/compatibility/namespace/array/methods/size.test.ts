@@ -12,22 +12,22 @@ describe('ARRAY Namespace - SIZE Method', () => {
 
         const { result, plots } = await pineTS.run((context) => {
             const { close, open } = context.data;
-                            const array = context.array;
-                            const { plot, plotchar } = context.core;
-                        
-                            const arr1 = array.new(5, 10);
-                            const arr2 = array.new(5, 20);
-                            
-                            const size_native = array.size(arr1);
-                            const size_var = array.size(arr2);
-                        
-                            plotchar(size_native, '_plotchar');
-                            plot(size_var, '_plot');
-                        
-                            return {
-                                size_native,
-                                size_var,
-                            };
+                const array = context.array;
+                const { plot, plotchar } = context.core;
+            
+                const arr1 = array.new(5, 100);
+                const arr2 = array.new(10, 200);
+            
+                const size1 = array.size(arr1);
+                const size2 = array.size(arr2);
+                
+                plotchar(size1, '_plotchar');
+                plot(size2, '_plot');
+            
+                return {
+                    size1,
+                    size2,
+                };
         });
 
         // Filter results for the date range 2025-10-01 to 2025-11-20

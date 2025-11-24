@@ -12,28 +12,27 @@ describe('ARRAY Namespace - SET Method', () => {
 
         const { result, plots } = await pineTS.run((context) => {
             const { close, open } = context.data;
-                            const array = context.array;
-                            const { plot, plotchar } = context.core;
-                        
-                            const arr1 = array.new(5, 10);
-                            const arr2 = array.new(5, 20);
-                            
-                        array.set(arr1, 0, 100);
-                        array.set(arr2, 1, 200);
-                    
-                        const val1 = array.get(arr1, 0);
-                        const val2 = array.get(arr2, 1);
-                        
-                        plotchar(val1, '_plotchar');
-                        plot(val2, '_plot');
-                    
-                        const set_native = arr1.array;
-                        const set_var = arr2.array;
-                        
-                            return {
-                                set_native,
-                                set_var,
-                            };
+                const array = context.array;
+                const { plot, plotchar } = context.core;
+            
+                const arr1 = array.new(5, 0);
+                array.set(arr1, 0, 10);
+                array.set(arr1, 2, 30);
+                array.set(arr1, 4, 50);
+            
+                const val1 = array.get(arr1, 0);
+                const val2 = array.get(arr1, 2);
+                
+                plotchar(val1, '_plotchar');
+                plot(val2, '_plot');
+            
+                const set_first = array.get(arr1, 0);
+                const set_last = array.get(arr1, 4);
+            
+                return {
+                    set_first,
+                    set_last,
+                };
         });
 
         // Filter results for the date range 2025-10-01 to 2025-11-20
