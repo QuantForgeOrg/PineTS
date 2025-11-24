@@ -50,5 +50,9 @@
         sqzOn,
         sqzOff,
         noSqz,
+        iff_1,
+        iff_2,
+        bcolor,
+        scolor,
     };
 };
