@@ -76,6 +76,33 @@ const CJSConfigDev = {
     ],
 };
 
+// Plugin to exclude MockProvider from browser builds
+function excludeMockProvider() {
+    return {
+        name: 'exclude-mock-provider',
+        resolveId(source) {
+            // Exclude MockProvider from browser builds
+            if (source.includes('Mock/MockProvider.class') || source.includes('Mock\\MockProvider.class')) {
+                return { id: '\0mock-provider-stub', external: false };
+            }
+            return null;
+        },
+        load(id) {
+            // Return stub that implements IProvider interface but does nothing
+            if (id === '\0mock-provider-stub') {
+                return `
+                    export class MockProvider {
+                        async getMarketData() {
+                            return [];
+                        }
+                    }
+                `;
+            }
+            return null;
+        },
+    };
+}
+
 const BrowserConfigDev = {
     input: './src/index.ts',
     output: {
@@ -85,6 +112,7 @@ const BrowserConfigDev = {
         exports: 'auto',
     },
     plugins: [
+        excludeMockProvider(),
         resolve({
             preferBuiltins: true,
             extensions: ['.js', '.ts', '.json'],
@@ -192,6 +220,7 @@ const BrowserConfigProd = {
         exports: 'auto',
     },
     plugins: [
+        excludeMockProvider(),
         resolve({
             preferBuiltins: true,
             extensions: ['.js', '.ts', '.json'],

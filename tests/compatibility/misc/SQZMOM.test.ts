@@ -62,6 +62,10 @@ describe('UNKNOWN Namespace - SQZMOM Method', () => {
                     sqzOn,
                     sqzOff,
                     noSqz,
+                    iff_1,
+                    iff_2,
+                    bcolor,
+                    scolor,
                 };
         });
 
