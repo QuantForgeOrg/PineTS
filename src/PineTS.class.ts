@@ -38,6 +38,11 @@ export class PineTS {
 
     private _ready = false;
 
+    private _transpiledCode: Function | String = null;
+    public get transpiledCode() {
+        return this._transpiledCode;
+    }
+
     constructor(
         private source: IProvider | any[],
         private tickerId?: string,
@@ -138,9 +143,9 @@ export class PineTS {
         if (!periods) periods = this.data.length;
 
         const context = this._initializeContext(pineTSCode);
-        const transpiledFn = this._transpileCode(pineTSCode);
+        this._transpiledCode = this._transpileCode(pineTSCode);
 
-        await this._executeIterations(context, transpiledFn, this.data.length - periods, this.data.length);
+        await this._executeIterations(context, this._transpiledCode, this.data.length - periods, this.data.length);
 
         return context;
     }
@@ -161,7 +166,7 @@ export class PineTS {
         if (!periods) periods = this.data.length;
 
         const context = this._initializeContext(pineTSCode);
-        const transpiledFn = this._transpileCode(pineTSCode);
+        this._transpiledCode = this._transpileCode(pineTSCode);
 
         const startIdx = this.data.length - periods;
         let processedUpToIdx = startIdx; // Track what we've fully processed
@@ -176,7 +181,7 @@ export class PineTS {
                 const toProcess = Math.min(unprocessedCount, pageSize);
                 const previousResultLength = this._getResultLength(context.result);
 
-                await this._executeIterations(context, transpiledFn, processedUpToIdx, processedUpToIdx + toProcess);
+                await this._executeIterations(context, this._transpiledCode, processedUpToIdx, processedUpToIdx + toProcess);
 
                 processedUpToIdx += toProcess;
 

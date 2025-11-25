@@ -145,3 +145,4 @@ _experiments
 config.json
 bfg.jar
 .scratchpad
+tests/_local
