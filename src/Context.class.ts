@@ -200,16 +200,24 @@ export class Context {
     }
 
     /**
-     * Set the current value of a series (assignment)
+     * Set the current value of a series (index 0)
      * @param target - The target series or array
      * @param value - The value to set
      */
     set(target: any, value: any) {
-        if (Array.isArray(target)) {
-            target[target.length - 1] = value;
-            return value;
+        if (target instanceof Series) {
+            target.set(0, value);
+            return;
         }
-        return value;
+
+        if (Array.isArray(target)) {
+            if (target.length > 0) {
+                target[target.length - 1] = value;
+            } else {
+                target.push(value);
+            }
+            return;
+        }
     }
     //#endregion
 }

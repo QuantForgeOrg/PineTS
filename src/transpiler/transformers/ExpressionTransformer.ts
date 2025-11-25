@@ -38,12 +38,7 @@ export function transformArrayIndex(node: any, scopeManager: ScopeManager): void
             const [scopedName, kind] = scopeManager.getVariable(node.object.name);
 
             // Transform the object to scoped variable: $.kind.scopedName
-            const varRef = ASTFactory.createContextVariableReference(kind, scopedName);
-
-            // Convert to $.get call
-            const getCall = ASTFactory.createGetCall(varRef, node.property);
-            Object.assign(node, getCall);
-            return;
+            node.object = ASTFactory.createContextVariableReference(kind, scopedName);
         }
 
         if (node.property.type === 'MemberExpression') {
@@ -188,6 +183,30 @@ export function transformMemberExpression(memberNode: any, originalParamName: st
     if (!memberNode._indexTransformed) {
         transformArrayIndex(memberNode, scopeManager);
         memberNode._indexTransformed = true;
+    }
+
+    // Convert to $.get(object, property) if it's a computed access on a context variable
+    if (
+        memberNode.computed &&
+        memberNode.object &&
+        memberNode.object.type === 'MemberExpression' &&
+        memberNode.object.object &&
+        memberNode.object.object.type === 'MemberExpression' &&
+        memberNode.object.object.object &&
+        memberNode.object.object.object.name === CONTEXT_NAME
+    ) {
+        // Check if this is LHS of an assignment
+        if (memberNode.parent && memberNode.parent.type === 'AssignmentExpression' && memberNode.parent.left === memberNode) {
+            return;
+        }
+
+        const getCall = ASTFactory.createGetCall(memberNode.object, memberNode.property);
+
+        // Preserve location
+        if (memberNode.start) getCall.start = memberNode.start;
+        if (memberNode.end) getCall.end = memberNode.end;
+
+        Object.assign(memberNode, getCall);
     }
 }
 

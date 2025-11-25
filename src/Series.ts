@@ -9,6 +9,13 @@ export class Series {
         return this.data[realIndex];
     }
 
+    public set(index: number, value: any): void {
+        const realIndex = this.data.length - 1 - (this.offset + index);
+        if (realIndex >= 0 && realIndex < this.data.length) {
+            this.data[realIndex] = value;
+        }
+    }
+
     public get length(): number {
         return this.data.length;
     }

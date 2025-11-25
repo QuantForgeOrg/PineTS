@@ -13,11 +13,26 @@ import {
 } from './ExpressionTransformer';
 
 export function transformAssignmentExpression(node: any, scopeManager: ScopeManager): void {
-    // Transform assignment expressions to use the context object
     let targetVarRef = null;
+    // Transform assignment expressions to use the context object
     if (node.left.type === 'Identifier') {
         const [varName, kind] = scopeManager.getVariable(node.left.name);
         targetVarRef = ASTFactory.createContextVariableReference(kind, varName);
+    } else if (node.left.type === 'MemberExpression' && node.left.computed) {
+        // Assignment to array element: series[0] = val
+        if (node.left.object.type === 'Identifier') {
+            const name = node.left.object.name;
+            const [varName, kind] = scopeManager.getVariable(name);
+            const isRenamed = varName !== name;
+            const isContextBound = scopeManager.isContextBound(name);
+
+            if ((isRenamed || isContextBound) && !scopeManager.isLoopVariable(name)) {
+                // If index is 0 (literal), transform to $.set(target, value)
+                if (node.left.property.type === 'Literal' && node.left.property.value === 0) {
+                    targetVarRef = ASTFactory.createContextVariableReference(kind, varName);
+                }
+            }
+        }
     }
 
     // Transform identifiers in the right side of the assignment
