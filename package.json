@@ -1,6 +1,6 @@
 {
     "name": "pinets",
-    "version": "0.2.1",
+    "version": "0.3.0",
     "description": "",
     "main": "dist/pinets.dev.es.js",
     "types": "dist/types/index.d.ts",
