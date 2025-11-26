@@ -144,3 +144,5 @@ _experiments
 .cursor
 config.json
 bfg.jar
+.scratchpad
+tests/_local

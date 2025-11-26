@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-// Copyright (C) 2025 Ala-eddine KADDOURI
+// Copyright (C) 2025 Alaa-eddine KADDOURI
 
 import { Core } from '@pinets/namespaces/Core';
-import { Input } from '@pinets/namespaces/Input';
-import PineMath from '@pinets/namespaces/PineMath';
-import { PineRequest } from '@pinets/namespaces/PineRequest';
-import TechnicalAnalysis from '@pinets/namespaces/TechnicalAnalysis';
-import { PineArray } from './namespaces/PineArray';
+import { Input } from '@pinets/namespaces/input/input.index';
+import PineMath from '@pinets/namespaces/math/math.index';
+import { PineRequest } from '@pinets/namespaces/request/request.index';
+import TechnicalAnalysis from '@pinets/namespaces/ta/ta.index';
+import { PineArray } from './namespaces/array/array.index';
 import { IProvider } from './marketData/IProvider';
+import { Series } from './Series';
 
 export class Context {
     public data: any = {
@@ -22,7 +23,6 @@ export class Context {
     };
     public cache: any = {};
     public taState: any = {}; // State for incremental TA calculations
-    public useTACache = false;
 
     public NA: any = NaN;
 
@@ -107,9 +107,13 @@ export class Context {
      * @returns the target array
      */
     init(trg, src: any, idx: number = 0) {
+        if (src instanceof Series) {
+            src = src.get(0);
+        }
+
         if (!trg) {
             if (Array.isArray(src)) {
-                trg = [this.precision(src[src.length - this.idx - 1 + idx])];
+                trg = [this.precision(src[src.length - 1 + idx])];
             } else {
                 trg = [this.precision(src)];
             }
@@ -117,9 +121,9 @@ export class Context {
             if (!Array.isArray(src) || Array.isArray(src[0])) {
                 //here we check that this is not a 2D array, in which case we consider it an array of values
                 //this is important for handling TA functions that return tupples or series of tuples
-                trg[0] = Array.isArray(src?.[0]) ? src[0] : this.precision(src);
+                trg[trg.length - 1] = Array.isArray(src?.[0]) ? src[0] : this.precision(src);
             } else {
-                trg[0] = this.precision(src[src.length - this.idx - 1 + idx]);
+                trg[trg.length - 1] = this.precision(src[src.length - 1 + idx]);
             }
         }
 
@@ -148,20 +152,71 @@ export class Context {
      */
     param(source, index, name?: string) {
         if (typeof source === 'string') return source;
+        if (source instanceof Series) {
+            if (index) {
+                return new Series(source.data, source.offset + index);
+            }
+            return source;
+        }
+
         if (!Array.isArray(source) && typeof source === 'object') return source;
 
         if (!this.params[name]) this.params[name] = [];
         if (Array.isArray(source)) {
-            if (index) {
-                this.params[name] = source.slice(index);
-                this.params[name].length = source.length; //ensure length is correct
-                return this.params[name];
-            }
-            this.params[name] = source.slice(0);
-            return this.params[name];
+            return new Series(source, index || 0);
         } else {
-            this.params[name][0] = source;
-            return this.params[name];
+            if (this.params[name].length === 0) {
+                this.params[name].push(source);
+            } else {
+                this.params[name][this.params[name].length - 1] = source;
+            }
+            return new Series(this.params[name], 0);
+        }
+    }
+
+    /**
+     * Access a series value with Pine Script semantics (reverse order)
+     * @param source - The source series or array
+     * @param index - The lookback index (0 = current value)
+     */
+    get(source: any, index: number) {
+        if (source instanceof Series) {
+            return source.get(index);
+        }
+
+        if (Array.isArray(source)) {
+            // Optimized forward array access:
+            // index 0 -> last element (length - 1)
+            // index 1 -> second last element (length - 2)
+            const realIndex = source.length - 1 - index;
+            if (realIndex < 0 || realIndex >= source.length) {
+                return NaN;
+            }
+            return source[realIndex];
+        }
+
+        // Scalar value - return as is, ignoring index
+        return source;
+    }
+
+    /**
+     * Set the current value of a series (index 0)
+     * @param target - The target series or array
+     * @param value - The value to set
+     */
+    set(target: any, value: any) {
+        if (target instanceof Series) {
+            target.set(0, value);
+            return;
+        }
+
+        if (Array.isArray(target)) {
+            if (target.length > 0) {
+                target[target.length - 1] = value;
+            } else {
+                target.push(value);
+            }
+            return;
         }
     }
     //#endregion

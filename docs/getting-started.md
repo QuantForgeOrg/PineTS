@@ -82,6 +82,45 @@ const { result } = await pineTS.run((context) => {
 });
 ```
 
+## Using Pagination for Large Datasets
+
+For processing large datasets efficiently or streaming live market data, use pagination:
+
+```javascript
+import { PineTS, Providers } from 'pinets';
+
+// Initialize with a provider for live streaming capability
+const pineTS = new PineTS(Providers.Binance, 'BTCUSDT', '1h');
+
+// Process 200 candles in pages of 50
+const iterator = pineTS.run(
+    (context) => {
+        const ta = context.ta;
+        const { close } = context.data;
+
+        const sma = ta.sma(close, 20);
+        return { sma };
+    },
+    200,
+    50
+);
+
+// Process each page as it becomes available
+for await (const page of iterator) {
+    console.log(`Received ${page.result.sma.length} results`);
+    // With a provider and no end date, automatically continues with live data
+}
+```
+
+**Benefits:**
+
+-   Memory efficient for large datasets
+-   Shows progress during processing
+-   Automatically streams live market data when using a provider
+-   Perfect for real-time trading bots and dashboards
+
+📖 **For complete pagination documentation and advanced examples, see [Pagination & Live Streaming](../pagination/).**
+
 ## Key Differences from Pine Script
 
 1. **Variable Declaration**: Use JavaScript's `const`, `let`, and `var` instead of Pine Script's implicit declaration

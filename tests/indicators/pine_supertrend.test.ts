@@ -48,7 +48,7 @@ describe('Indicators', () => {
             };
         });
 
-        const data = plots['Up'].data.reverse().slice(0, 30);
+        const data = plots['direction'].data.reverse().slice(0, 30);
         data.forEach((d) => {
             d.time = new Date(d.time).toISOString();
             delete d.options;

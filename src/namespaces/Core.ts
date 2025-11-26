@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
+import { Series } from '../Series';
+
 export class Core {
     public color = {
         param: (source, index = 0) => {
-            if (Array.isArray(source)) {
-                return source[index];
-            }
-            return source;
+            return Series.from(source).get(index);
         },
         rgb: (r: number, g: number, b: number, a?: number) => (a ? `rgba(${r}, ${g}, ${b}, ${a})` : `rgb(${r}, ${g}, ${b})`),
         new: (color: string, a?: number) => {
@@ -38,11 +37,7 @@ export class Core {
     private extractPlotOptions(options: PlotCharOptions) {
         const _options: any = {};
         for (let key in options) {
-            if (Array.isArray(options[key])) {
-                _options[key] = options[key][0];
-            } else {
-                _options[key] = options[key];
-            }
+            _options[key] = Series.from(options[key]).get(0);
         }
         return _options;
     }
@@ -56,9 +51,11 @@ export class Core {
             this.context.plots[title] = { data: [], options: this.extractPlotOptions(options), title };
         }
 
+        const value = Series.from(series).get(0);
+
         this.context.plots[title].data.push({
-            time: this.context.marketData[this.context.marketData.length - this.context.idx - 1].openTime,
-            value: series[0],
+            time: this.context.marketData[this.context.idx].openTime,
+            value: value,
             options: { ...this.extractPlotOptions(options), style: 'char' },
         });
     }
@@ -68,19 +65,21 @@ export class Core {
             this.context.plots[title] = { data: [], options: this.extractPlotOptions(options), title };
         }
 
+        const value = Series.from(series).get(0);
+
         this.context.plots[title].data.push({
-            time: this.context.marketData[this.context.marketData.length - this.context.idx - 1].openTime,
-            value: series[0],
+            time: this.context.marketData[this.context.idx].openTime,
+            value: value,
             options: this.extractPlotOptions(options),
         });
     }
 
     na(series: any) {
-        return Array.isArray(series) ? isNaN(series[0]) : isNaN(series);
+        return isNaN(Series.from(series).get(0));
     }
     nz(series: any, replacement: number = 0) {
-        const val = Array.isArray(series) ? series[0] : series;
-        const rep = Array.isArray(series) ? replacement[0] : replacement;
+        const val = Series.from(series).get(0);
+        const rep = Series.from(replacement).get(0);
         return isNaN(val) ? rep : val;
     }
 }
