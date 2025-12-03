@@ -19,7 +19,7 @@ All functions listed below are verified to exist in Pine Script v5.
 | `ta.rma()`    | ✅     | Rolling/Running Moving Average           |
 | `ta.vwma()`   | ✅     | Volume Weighted Moving Average           |
 | `ta.alma()`   | ✅     | Arnaud Legoux Moving Average             |
-| `ta.linreg()` | ✔️     | Linear Regression                        |
+| `ta.linreg()` | ✅     | Linear Regression                        |
 | `ta.swma()`   | ✅     | Symmetrically Weighted Moving Average    |
 | `ta.vwap`     | ✅     | Volume Weighted Average Price (variable) |
 
@@ -48,13 +48,13 @@ All functions listed below are verified to exist in Pine Script v5.
 | `ta.stdev()`    | ✅     | Standard Deviation      |
 | `ta.variance()` | ✅     | Variance                |
 | `ta.dev()`      | ✅     | Mean Absolute Deviation |
-| `ta.tr`         | ✔️     | True Range (variable)   |
-| `ta.tr()`       | ✔️     | True Range (function)   |
+| `ta.tr`         | ✅     | True Range (variable)   |
+| `ta.tr()`       | ✅     | True Range (function)   |
 | `ta.bb()`       | ✅     | Bollinger Bands         |
-| `ta.bbw()`      | ⬜     | Bollinger Bands Width   |
-| `ta.kc()`       | ⬜     | Keltner Channels        |
-| `ta.kcw()`      | ⬜     | Keltner Channels Width  |
-| `ta.range()`    | ⬜     | Range                   |
+| `ta.bbw()`      | ✅     | Bollinger Bands Width   |
+| `ta.kc()`       | ✅     | Keltner Channels        |
+| `ta.kcw()`      | ✅     | Keltner Channels Width  |
+| `ta.range()`    | ✅     | Range                   |
 
 ### Trend Analysis
 
@@ -74,13 +74,13 @@ All functions listed below are verified to exist in Pine Script v5.
 | Function     | Status | Description                                            |
 | ------------ | ------ | ------------------------------------------------------ |
 | `ta.obv`     | ✅     | On-Balance Volume (variable)                           |
-| `ta.pvt`     | ⬜     | Price-Volume Trend (variable)                          |
-| `ta.wad`     | ⬜     | Williams Accumulation/Distribution (variable)          |
-| `ta.wvad`    | ⬜     | Williams Variable Accumulation/Distribution (variable) |
-| `ta.accdist` | ⬜     | Accumulation/Distribution (variable)                   |
-| `ta.nvi`     | ⬜     | Negative Volume Index (variable)                       |
-| `ta.pvi`     | ⬜     | Positive Volume Index (variable)                       |
-| `ta.iii`     | ⬜     | Intraday Intensity Index (variable)                    |
+| `ta.pvt`     | ✅     | Price-Volume Trend (variable)                          |
+| `ta.wad`     | ✅     | Williams Accumulation/Distribution (variable)          |
+| `ta.wvad`    | ✅     | Williams Variable Accumulation/Distribution (variable) |
+| `ta.accdist` | ✅     | Accumulation/Distribution (variable)                   |
+| `ta.nvi`     | ✅     | Negative Volume Index (variable)                       |
+| `ta.pvi`     | ✅     | Positive Volume Index (variable)                       |
+| `ta.iii`     | ✅     | Intraday Intensity Index (variable)                    |
 
 ### Statistical Functions
 

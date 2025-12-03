@@ -3,6 +3,188 @@ import { describe, expect, it } from 'vitest';
 import { PineTS, Provider } from 'index';
 
 describe('Functions', () => {
+    it('PVT Function', async () => {
+        const pineTS = new PineTS(Provider.Mock, 'BTCUSDC', 'W', null, new Date('2018-12-10').getTime(), new Date('2020-01-27').getTime());
+
+        const sourceCode = (context) => {
+            const { close, volume } = context.data;
+            const { ta, plotchar } = context.pine;
+            function f_pvt() {
+                return ta.cum((ta.change(close) / close[1]) * volume);
+            }
+            const res = f_pvt();
+            plotchar(res, 'plot');
+
+            return { res };
+        };
+
+        const { result, plots } = await pineTS.run(sourceCode);
+
+        let _plotdata = plots['plot']?.data;
+        const startDate = new Date('2019-05-20').getTime();
+        const endDate = new Date('2019-09-16').getTime();
+
+        let plotdata_str = '';
+        for (let i = 0; i < _plotdata.length; i++) {
+            const time = _plotdata[i].time;
+            if (time < startDate || time > endDate) {
+                continue;
+            }
+
+            const str_time = new Date(time).toISOString().slice(0, -1) + '-00:00';
+            const data = _plotdata[i].value;
+            plotdata_str += `[${str_time}]: ${data}\n`;
+        }
+
+        const expected_plot = `[2019-05-20T00:00:00.000-00:00]: 15337.8023158432
+[2019-05-27T00:00:00.000-00:00]: 15356.4161984698
+[2019-06-03T00:00:00.000-00:00]: 13575.7271714945
+[2019-06-10T00:00:00.000-00:00]: 16064.8844814025
+[2019-06-17T00:00:00.000-00:00]: 19435.6967469751
+[2019-06-24T00:00:00.000-00:00]: 19171.8299694131
+[2019-07-01T00:00:00.000-00:00]: 20539.084623692
+[2019-07-08T00:00:00.000-00:00]: 18165.7960525407
+[2019-07-15T00:00:00.000-00:00]: 19061.8517623342
+[2019-07-22T00:00:00.000-00:00]: 17977.9512087809
+[2019-07-29T00:00:00.000-00:00]: 19906.9534139818
+[2019-08-05T00:00:00.000-00:00]: 20953.594020523
+[2019-08-12T00:00:00.000-00:00]: 19068.3291719978
+[2019-08-19T00:00:00.000-00:00]: 18791.0890461204
+[2019-08-26T00:00:00.000-00:00]: 18315.5573542303
+[2019-09-02T00:00:00.000-00:00]: 19218.4585582482
+[2019-09-09T00:00:00.000-00:00]: 19130.6768020241
+[2019-09-16T00:00:00.000-00:00]: 18798.1310217967`;
+
+        console.log('expected_plot', expected_plot);
+        console.log('plotdata_str', plotdata_str);
+        expect(plotdata_str.trim()).toEqual(expected_plot.trim());
+    });
+
+    it('WAD Function', async () => {
+        const pineTS = new PineTS(Provider.Mock, 'BTCUSDC', 'W', null, new Date('2018-12-10').getTime(), new Date('2020-01-27').getTime());
+
+        const sourceCode = (context) => {
+            const { close, volume } = context.data;
+            const { ta, plotchar } = context.pine;
+            function f_wad() {
+                const trueHigh = math.max(high, close[1]);
+                const trueLow = math.min(low, close[1]);
+                const mom = ta.change(close);
+                const gain = mom > 0 ? close - trueLow : mom < 0 ? close - trueHigh : 0;
+                return ta.cum(gain);
+            }
+            const res = f_wad();
+            plotchar(res, 'plot');
+
+            return { res };
+        };
+
+        const { result, plots } = await pineTS.run(sourceCode);
+
+        let _plotdata = plots['plot']?.data;
+        const startDate = new Date('2019-05-20').getTime();
+        const endDate = new Date('2019-09-16').getTime();
+
+        let plotdata_str = '';
+        for (let i = 0; i < _plotdata.length; i++) {
+            const time = _plotdata[i].time;
+            if (time < startDate || time > endDate) {
+                continue;
+            }
+
+            const str_time = new Date(time).toISOString().slice(0, -1) + '-00:00';
+            const data = _plotdata[i].value;
+            plotdata_str += `[${str_time}]: ${data}\n`;
+        }
+
+        const expected_plot = `[2019-05-20T00:00:00.000-00:00]: 6479.75
+[2019-05-27T00:00:00.000-00:00]: 7234.47
+[2019-06-03T00:00:00.000-00:00]: 6120.31
+[2019-06-10T00:00:00.000-00:00]: 7584.03
+[2019-06-17T00:00:00.000-00:00]: 9492.71
+[2019-06-24T00:00:00.000-00:00]: 6377.22
+[2019-07-01T00:00:00.000-00:00]: 8189.66
+[2019-07-08T00:00:00.000-00:00]: 5194.67
+[2019-07-15T00:00:00.000-00:00]: 6706.99
+[2019-07-22T00:00:00.000-00:00]: 5550.39
+[2019-07-29T00:00:00.000-00:00]: 7168.26
+[2019-08-05T00:00:00.000-00:00]: 7735.99
+[2019-08-12T00:00:00.000-00:00]: 6501.77
+[2019-08-19T00:00:00.000-00:00]: 5686.06
+[2019-08-26T00:00:00.000-00:00]: 4805.78
+[2019-09-02T00:00:00.000-00:00]: 5462.59
+[2019-09-09T00:00:00.000-00:00]: 5238.67
+[2019-09-16T00:00:00.000-00:00]: 4881.74`;
+
+        console.log('expected_plot', expected_plot);
+        console.log('plotdata_str', plotdata_str);
+        expect(plotdata_str.trim()).toEqual(expected_plot.trim());
+    });
+
+    it('NVI Function', async () => {
+        const pineTS = new PineTS(Provider.Mock, 'BTCUSDC', 'W', null, new Date('2018-12-10').getTime(), new Date('2020-01-27').getTime());
+
+        const sourceCode = (context) => {
+            const { close, volume } = context.data;
+            const { ta, plotchar } = context.pine;
+            function f_nvi() {
+                let ta_nvi = 1.0;
+                const prevNvi = nz(ta_nvi[1], 0.0) == 0.0 ? 1.0 : ta_nvi[1];
+                if (nz(close, 0.0) == 0.0 || nz(close[1], 0.0) == 0.0) {
+                    ta_nvi = prevNvi;
+                } else {
+                    ta_nvi = volume < nz(volume[1], 0.0) ? prevNvi + ((close - close[1]) / close[1]) * prevNvi : prevNvi;
+                }
+                return ta_nvi;
+            }
+            const res = f_nvi();
+            plotchar(res, 'plot');
+
+            return { res };
+        };
+
+        const { result, plots } = await pineTS.run(sourceCode);
+
+        let _plotdata = plots['plot']?.data;
+        const startDate = new Date('2019-05-20').getTime();
+        const endDate = new Date('2019-09-16').getTime();
+
+        let plotdata_str = '';
+        for (let i = 0; i < _plotdata.length; i++) {
+            const time = _plotdata[i].time;
+            if (time < startDate || time > endDate) {
+                continue;
+            }
+
+            const str_time = new Date(time).toISOString().slice(0, -1) + '-00:00';
+            const data = _plotdata[i].value;
+            plotdata_str += `[${str_time}]: ${data}\n`;
+        }
+
+        const expected_plot = `[2019-05-20T00:00:00.000-00:00]: 1.2290324694
+[2019-05-27T00:00:00.000-00:00]: 1.2305073444
+[2019-06-03T00:00:00.000-00:00]: 1.0749544745
+[2019-06-10T00:00:00.000-00:00]: 1.2649121811
+[2019-06-17T00:00:00.000-00:00]: 1.2649121811
+[2019-06-24T00:00:00.000-00:00]: 1.2649121811
+[2019-07-01T00:00:00.000-00:00]: 1.3510336212
+[2019-07-08T00:00:00.000-00:00]: 1.3510336212
+[2019-07-15T00:00:00.000-00:00]: 1.3510336212
+[2019-07-22T00:00:00.000-00:00]: 1.2165174032
+[2019-07-29T00:00:00.000-00:00]: 1.2165174032
+[2019-08-05T00:00:00.000-00:00]: 1.2165174032
+[2019-08-12T00:00:00.000-00:00]: 1.0876020227
+[2019-08-19T00:00:00.000-00:00]: 1.0686079727
+[2019-08-26T00:00:00.000-00:00]: 1.0287770798
+[2019-09-02T00:00:00.000-00:00]: 1.0287770798
+[2019-09-09T00:00:00.000-00:00]: 1.0205375789
+[2019-09-16T00:00:00.000-00:00]: 1.0205375789`;
+
+        console.log('expected_plot', expected_plot);
+        console.log('plotdata_str', plotdata_str);
+        expect(plotdata_str.trim()).toEqual(expected_plot.trim());
+    });
+
     it('MFI using pine function', async () => {
         const pineTS = new PineTS(Provider.Mock, 'BTCUSDC', 'W', null, new Date('2018-12-10').getTime(), new Date('2020-01-27').getTime());
 

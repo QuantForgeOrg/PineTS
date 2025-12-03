@@ -102,6 +102,61 @@ describe('Technical Analysis - Moving Averages', () => {
         expect(part).toEqual(arrayPrecision(expected));
     });
 
+    it('LINREG - Linear Regression with actual data', async () => {
+        const pineTS = new PineTS(Provider.Mock, 'BTCUSDC', 'W', null, new Date('2018-12-10').getTime(), new Date('2020-01-27').getTime());
+
+        const sourceCode = (context) => {
+            const { close, volume } = context.data;
+            const { ta, plotchar } = context.pine;
+
+            const res = ta.linreg(close, 9, 3);
+            plotchar(res, 'plot');
+
+            return { res };
+        };
+
+        const { result, plots } = await pineTS.run(sourceCode);
+
+        let _plotdata = plots['plot']?.data;
+        const startDate = new Date('2019-05-20').getTime();
+        const endDate = new Date('2019-09-16').getTime();
+
+        let plotdata_str = '';
+        for (let i = 0; i < _plotdata.length; i++) {
+            const time = _plotdata[i].time;
+            if (time < startDate || time > endDate) {
+                continue;
+            }
+
+            const str_time = new Date(time).toISOString().slice(0, -1) + '-00:00';
+            const data = _plotdata[i].value;
+            plotdata_str += `[${str_time}]: ${data}\n`;
+        }
+
+        const expected_plot = `[2019-05-20T00:00:00.000-00:00]: 6580.8423333333
+[2019-05-27T00:00:00.000-00:00]: 7113.3673333333
+[2019-06-03T00:00:00.000-00:00]: 7341.352
+[2019-06-10T00:00:00.000-00:00]: 7769.3849444444
+[2019-06-17T00:00:00.000-00:00]: 8460.4013888889
+[2019-06-24T00:00:00.000-00:00]: 9045.4373333333
+[2019-07-01T00:00:00.000-00:00]: 9651.7293333333
+[2019-07-08T00:00:00.000-00:00]: 9896.3795
+[2019-07-15T00:00:00.000-00:00]: 10125.147
+[2019-07-22T00:00:00.000-00:00]: 10111.8471666667
+[2019-07-29T00:00:00.000-00:00]: 10340.7423888889
+[2019-08-05T00:00:00.000-00:00]: 10663.6537222222
+[2019-08-12T00:00:00.000-00:00]: 10666.6588888889
+[2019-08-19T00:00:00.000-00:00]: 10563.8484444444
+[2019-08-26T00:00:00.000-00:00]: 10408.4487777778
+[2019-09-02T00:00:00.000-00:00]: 10362.9506666667
+[2019-09-09T00:00:00.000-00:00]: 10356.8213888889
+[2019-09-16T00:00:00.000-00:00]: 10285.6642777778`;
+
+        console.log('expected_plot', expected_plot);
+        console.log('plotdata_str', plotdata_str);
+        expect(plotdata_str.trim()).toEqual(expected_plot.trim());
+    });
+
     it('ALMA - Arnaud Legoux Moving Average', async () => {
         const pineTS = new PineTS(Provider.Mock, 'BTCUSDC', 'W', null, new Date('2024-10-29').getTime(), new Date('2025-11-20').getTime());
 
