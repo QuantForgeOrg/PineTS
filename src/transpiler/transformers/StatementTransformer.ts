@@ -620,6 +620,11 @@ export function transformReturnStatement(node: any, scopeManager: ScopeManager):
             node.argument.properties = node.argument.properties.map((prop: any) => {
                 // Check for shorthand properties
                 if (prop.shorthand) {
+                    // Check if it's a context-bound variable first
+                    if (scopeManager.isContextBound(prop.value.name)) {
+                        return prop;
+                    }
+
                     // Get the variable name and kind
                     const [scopedName, kind] = scopeManager.getVariable(prop.value.name);
 
@@ -640,7 +645,8 @@ export function transformReturnStatement(node: any, scopeManager: ScopeManager):
                     // Check if it's a context-bound variable (like 'close', 'open', etc.)
                     if (scopeManager.isContextBound(prop.value.name) && !scopeManager.isRootParam(prop.value.name)) {
                         // It's a data variable - use $.get(variable, 0)
-                        prop.value = ASTFactory.createGetCall(prop.value, 0);
+                        // prop.value = ASTFactory.createGetCall(prop.value, 0);
+                        // FIXED: Keep native data as Series (don't dereference to value)
                     } else if (!scopeManager.isContextBound(prop.value.name)) {
                         // It's a user variable - transform to context reference
                         const [scopedName, kind] = scopeManager.getVariable(prop.value.name);

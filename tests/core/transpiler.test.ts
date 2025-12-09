@@ -50,6 +50,64 @@ describe('Transpiler', () => {
         expect(result).toBe(expected_code);
     });
 
+
+    it('Native Data', async () => {
+      const fakeContext = {};
+      const transformer = transpile.bind(fakeContext);
+
+      const source = (context) => {
+          const { close, open, high, low, hlc3, volume } = context.data;
+          const { plotchar, color, plot, na, nz } = context.core;
+
+          const ta = context.ta;
+          const math = context.math;
+
+          let lowest_signaled_price = nz(open, na);
+          let n_a = na;
+          if (na(n_a)) {
+              n_a = close;
+          }
+
+          return {
+            open, close, high, low, hlc3, volume,
+            lowest_signaled_price,
+            n_a,
+          }
+      };
+
+      let transpiled = transformer(source);
+
+      console.log(transpiled.toString());
+      const result = transpiled.toString().trim();
+
+      /* prettier-ignore */
+      const expected_code = `$ => {
+  const {close, open, high, low, hlc3, volume} = $.data;
+  const {plotchar, color, plot, na, nz} = $.core;
+  const ta = $.ta;
+  const math = $.math;
+  const p0 = $.param(open, undefined, 'p0');
+  $.let.glb1_lowest_signaled_price = $.init($.let.glb1_lowest_signaled_price, nz(p0, NaN));
+  $.let.glb1_n_a = $.init($.let.glb1_n_a, NaN);
+  const p1 = $.param($.let.glb1_n_a, undefined, 'p1');
+  if (na(p1)) {
+    $.set($.let.glb1_n_a, $.get(close, 0));
+  }
+  return {
+    open,
+    close: close,
+    high: high,
+    low: low,
+    hlc3,
+    volume,
+    lowest_signaled_price: $.let.glb1_lowest_signaled_price,
+    n_a: $.let.glb1_n_a
+  };
+}`;
+
+      expect(result).toBe(expected_code);
+  });    
+
     it('Unwrapped PineTS Code', async () => {
         const fakeContext = {};
         const transformer = transpile.bind(fakeContext);
