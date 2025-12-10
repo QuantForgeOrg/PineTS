@@ -3,6 +3,8 @@
 
 import { IProvider, ISymbolInfo } from './marketData/IProvider';
 import { PineArray } from './namespaces/array/array.index';
+import { PineMap } from './namespaces/map/map.index';
+import { PineMatrix } from './namespaces/matrix/matrix.index';
 import { Barstate } from './namespaces/Barstate';
 import { Core } from './namespaces/Core';
 import { Input } from './namespaces/input/input.index';
@@ -10,6 +12,9 @@ import PineMath from './namespaces/math/math.index';
 import { PineRequest } from './namespaces/request/request.index';
 import TechnicalAnalysis from './namespaces/ta/ta.index';
 import { Series } from './Series';
+import { Log } from './namespaces/Log';
+import { Str } from './namespaces/Str';
+import types from './namespaces/Types';
 
 export class Context {
     public data: any = {
@@ -37,6 +42,8 @@ export class Context {
         math: PineMath;
         request: PineRequest;
         array: PineArray;
+        map: PineMap;
+        matrix: PineMatrix;
         na: () => any;
         plotchar: (...args: any[]) => any;
         color: any;
@@ -45,6 +52,9 @@ export class Context {
         bar_index: number;
         syminfo: ISymbolInfo;
         barstate: Barstate;
+        log: Log;
+        str: Str;
+        [key: string]: any;
     };
 
     // Track deprecation warnings to avoid spam
@@ -116,6 +126,8 @@ export class Context {
             math: new PineMath(this),
             request: new PineRequest(this),
             array: new PineArray(this),
+            map: new PineMap(this),
+            matrix: new PineMatrix(this),
             na: coreFunctions.na,
             plotchar: coreFunctions.plotchar,
             color: coreFunctions.color,
@@ -129,6 +141,18 @@ export class Context {
             get bar_index() {
                 return _this.idx;
             },
+            get last_bar_index() {
+                return _this.data.close.length - 1;
+            },
+            get last_bar_time() {
+                return _this.data.openTime.get(_this.data.openTime.length - 1);
+            },
+            get timenow() {
+                return new Date().getTime();
+            },
+            log: new Log(this),
+            str: new Str(this),
+            ...types,
         };
     }
 

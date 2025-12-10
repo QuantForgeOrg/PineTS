@@ -1,19 +1,13 @@
-<svg width="114.6" height="20" viewBox="0 0 1146 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="polyline: 0/3 (0%)">
+<svg width="137.52" height="24" viewBox="0 0 1146 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="polyline: 0/3 (0%)">
   <title>polyline: 0/3 (0%)</title>
-  <linearGradient id="bEAWj" x2="0" y2="100%">
-    <stop offset="0" stop-opacity=".1" stop-color="#EEE"/>
-    <stop offset="1" stop-opacity=".1"/>
-  </linearGradient>
-  <mask id="vPjgO"><rect width="1146" height="200" rx="30" fill="#FFF"/></mask>
-  <g mask="url(#vPjgO)">
-    <rect width="527" height="200" fill="#555"/>
-    <rect width="619" height="200" fill="#E43" x="527"/>
-    <rect width="1146" height="200" fill="url(#bEAWj)"/>
+  <g>
+    <rect fill="#555" width="527" height="200"/>
+    <rect fill="#E43" x="527" width="619" height="200"/>
   </g>
   <g aria-hidden="true" fill="#fff" text-anchor="start" font-family="Verdana,DejaVu Sans,sans-serif" font-size="110">
-    <text x="60" y="148" textLength="427" fill="#000" opacity="0.25">polyline</text>
+    <text x="60" y="148" textLength="427" fill="#000" opacity="0.1">polyline</text>
     <text x="50" y="138" textLength="427">polyline</text>
-    <text x="582" y="148" textLength="519" fill="#000" opacity="0.25">0/3 (0%)</text>
+    <text x="582" y="148" textLength="519" fill="#000" opacity="0.1">0/3 (0%)</text>
     <text x="572" y="138" textLength="519">0/3 (0%)</text>
   </g>
   

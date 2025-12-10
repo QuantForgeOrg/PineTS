@@ -172,7 +172,7 @@ describe('Array Manipulation & Logic', () => {
 
         const sourceCode = (context) => {
             const { close, high, low, volume } = context.data;
-            const { na, plotchar, math, array } = context.pine;
+            const { na, plotchar, math, array, order } = context.pine;
 
             let a = array.new_float(0, 0);
             for (let i = 0; i <= 9; i++) {
@@ -180,7 +180,7 @@ describe('Array Manipulation & Logic', () => {
             }
             let res = array.slice(a, 0, 5);
             res.reverse();
-            res.sort();
+            res.sort(order.ascending);
 
             return { res };
         };

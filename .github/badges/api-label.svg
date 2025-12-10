@@ -1,19 +1,13 @@
-<svg width="105" height="20" viewBox="0 0 1050 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="label: 0/43 (0%)">
+<svg width="126" height="24" viewBox="0 0 1050 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="label: 0/43 (0%)">
   <title>label: 0/43 (0%)</title>
-  <linearGradient id="ofmxO" x2="0" y2="100%">
-    <stop offset="0" stop-opacity=".1" stop-color="#EEE"/>
-    <stop offset="1" stop-opacity=".1"/>
-  </linearGradient>
-  <mask id="QhFpy"><rect width="1050" height="200" rx="30" fill="#FFF"/></mask>
-  <g mask="url(#QhFpy)">
-    <rect width="361" height="200" fill="#555"/>
-    <rect width="689" height="200" fill="#E43" x="361"/>
-    <rect width="1050" height="200" fill="url(#ofmxO)"/>
+  <g>
+    <rect fill="#555" width="361" height="200"/>
+    <rect fill="#E43" x="361" width="689" height="200"/>
   </g>
   <g aria-hidden="true" fill="#fff" text-anchor="start" font-family="Verdana,DejaVu Sans,sans-serif" font-size="110">
-    <text x="60" y="148" textLength="261" fill="#000" opacity="0.25">label</text>
+    <text x="60" y="148" textLength="261" fill="#000" opacity="0.1">label</text>
     <text x="50" y="138" textLength="261">label</text>
-    <text x="416" y="148" textLength="589" fill="#000" opacity="0.25">0/43 (0%)</text>
+    <text x="416" y="148" textLength="589" fill="#000" opacity="0.1">0/43 (0%)</text>
     <text x="406" y="138" textLength="589">0/43 (0%)</text>
   </g>
   

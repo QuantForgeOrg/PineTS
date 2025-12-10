@@ -1,232 +1,232 @@
 {
-  "dividends": {
-    "dividends.future_amount": false,
-    "dividends.future_ex_date": false,
-    "dividends.future_pay_date": false,
-    "dividends.gross": false,
-    "dividends.net": false
-  },
-  "earnings": {
-    "earnings.future_eps": false,
-    "earnings.future_period_end_time": false,
-    "earnings.future_revenue": false,
-    "earnings.future_time": false,
-    "earnings.actual": false,
-    "earnings.estimate": false,
-    "earnings.standardized": false
-  },
-  "adjustment": {
-    "adjustment.dividends": false,
-    "adjustment.none": false,
-    "adjustment.splits": false
-  },
-  "alert": {
-    "alert.freq_all": false,
-    "alert.freq_once_per_bar": false,
-    "alert.freq_once_per_bar_close": false
-  },
-  "backadjustment": {
-    "backadjustment.inherit": false,
-    "backadjustment.off": false,
-    "backadjustment.on": false
-  },
-  "barmerge": {
-    "barmerge.gaps_off": false,
-    "barmerge.gaps_on": false,
-    "barmerge.lookahead_off": false,
-    "barmerge.lookahead_on": false
-  },
-  "currency": {
-    "currency.AED": false,
-    "currency.ARS": false,
-    "currency.AUD": false,
-    "currency.BDT": false,
-    "currency.BHD": false,
-    "currency.BRL": false,
-    "currency.BTC": false,
-    "currency.CAD": false,
-    "currency.CHF": false,
-    "currency.CLP": false,
-    "currency.CNY": false,
-    "currency.COP": false,
-    "currency.CZK": false,
-    "currency.DKK": false,
-    "currency.EGP": false,
-    "currency.ETH": false,
-    "currency.EUR": false,
-    "currency.GBP": false,
-    "currency.HKD": false,
-    "currency.HUF": false,
-    "currency.IDR": false,
-    "currency.ILS": false,
-    "currency.INR": false,
-    "currency.ISK": false,
-    "currency.JPY": false,
-    "currency.KES": false,
-    "currency.KRW": false,
-    "currency.KWD": false,
-    "currency.LKR": false,
-    "currency.MAD": false,
-    "currency.MXN": false,
-    "currency.MYR": false,
-    "currency.NGN": false,
-    "currency.NOK": false,
-    "currency.NONE": false,
-    "currency.NZD": false,
-    "currency.PEN": false,
-    "currency.PHP": false,
-    "currency.PKR": false,
-    "currency.PLN": false,
-    "currency.QAR": false,
-    "currency.RON": false,
-    "currency.RSD": false,
-    "currency.RUB": false,
-    "currency.SAR": false,
-    "currency.SEK": false,
-    "currency.SGD": false,
-    "currency.THB": false,
-    "currency.TND": false,
-    "currency.TRY": false,
-    "currency.TWD": false,
-    "currency.USD": false,
-    "currency.USDT": false,
-    "currency.VES": false,
-    "currency.VND": false,
-    "currency.ZAR": false
-  },
-  "dayofweek": {
-    "dayofweek.friday": false,
-    "dayofweek.monday": false,
-    "dayofweek.saturday": false,
-    "dayofweek.sunday": false,
-    "dayofweek.thursday": false,
-    "dayofweek.tuesday": false,
-    "dayofweek.wednesday": false
-  },
-  "display": {
-    "display.all": false,
-    "display.data_window": false,
-    "display.none": false,
-    "display.pane": false,
-    "display.pine_screener": false,
-    "display.price_scale": false,
-    "display.status_line": false
-  },
-  "extend": {
-    "extend.both": false,
-    "extend.left": false,
-    "extend.none": false,
-    "extend.right": false
-  },
-  "font": {
-    "font.family_default": false,
-    "font.family_monospace": false
-  },
-  "format": {
-    "format.inherit": false,
-    "format.mintick": false,
-    "format.percent": false,
-    "format.price": false,
-    "format.volume": false
-  },
-  "hline": {
-    "hline.style_dashed": false,
-    "hline.style_dotted": false,
-    "hline.style_solid": false
-  },
-  "location": {
-    "location.abovebar": false,
-    "location.absolute": false,
-    "location.belowbar": false,
-    "location.bottom": false,
-    "location.top": false
-  },
-  "order": {
-    "order.ascending": false,
-    "order.descending": false
-  },
-  "plot": {
-    "plot.linestyle_dashed": false,
-    "plot.linestyle_dotted": false,
-    "plot.linestyle_solid": false,
-    "plot.style_area": false,
-    "plot.style_areabr": false,
-    "plot.style_circles": false,
-    "plot.style_columns": false,
-    "plot.style_cross": false,
-    "plot.style_histogram": false,
-    "plot.style_line": false,
-    "plot.style_linebr": false,
-    "plot.style_stepline": false,
-    "plot.style_stepline_diamond": false,
-    "plot.style_steplinebr": false
-  },
-  "position": {
-    "position.bottom_center": false,
-    "position.bottom_left": false,
-    "position.bottom_right": false,
-    "position.middle_center": false,
-    "position.middle_left": false,
-    "position.middle_right": false,
-    "position.top_center": false,
-    "position.top_left": false,
-    "position.top_right": false
-  },
-  "scale": {
-    "scale.left": false,
-    "scale.none": false,
-    "scale.right": false
-  },
-  "settlement_as_close": {
-    "settlement_as_close.inherit": false,
-    "settlement_as_close.off": false,
-    "settlement_as_close.on": false
-  },
-  "shape": {
-    "shape.arrowdown": false,
-    "shape.arrowup": false,
-    "shape.circle": false,
-    "shape.cross": false,
-    "shape.diamond": false,
-    "shape.flag": false,
-    "shape.labeldown": false,
-    "shape.labelup": false,
-    "shape.square": false,
-    "shape.triangledown": false,
-    "shape.triangleup": false,
-    "shape.xcross": false
-  },
-  "size": {
-    "size.auto": false,
-    "size.huge": false,
-    "size.large": false,
-    "size.normal": false,
-    "size.small": false,
-    "size.tiny": false
-  },
-  "splits": {
-    "splits.denominator": false,
-    "splits.numerator": false
-  },
-  "text": {
-    "text.align_bottom": false,
-    "text.align_center": false,
-    "text.align_left": false,
-    "text.align_right": false,
-    "text.align_top": false,
-    "text.format_bold": false,
-    "text.format_italic": false,
-    "text.format_none": false,
-    "text.wrap_auto": false,
-    "text.wrap_none": false
-  },
-  "xloc": {
-    "xloc.bar_index": false,
-    "xloc.bar_time": false
-  },
-  "yloc": {
-    "yloc.abovebar": false,
-    "yloc.belowbar": false,
-    "yloc.price": false
-  }
+    "dividends": {
+        "dividends.future_amount": false,
+        "dividends.future_ex_date": false,
+        "dividends.future_pay_date": false,
+        "dividends.gross": false,
+        "dividends.net": false
+    },
+    "earnings": {
+        "earnings.future_eps": false,
+        "earnings.future_period_end_time": false,
+        "earnings.future_revenue": false,
+        "earnings.future_time": false,
+        "earnings.actual": false,
+        "earnings.estimate": false,
+        "earnings.standardized": false
+    },
+    "adjustment": {
+        "adjustment.dividends": false,
+        "adjustment.none": false,
+        "adjustment.splits": false
+    },
+    "alert": {
+        "alert.freq_all": false,
+        "alert.freq_once_per_bar": false,
+        "alert.freq_once_per_bar_close": false
+    },
+    "backadjustment": {
+        "backadjustment.inherit": false,
+        "backadjustment.off": false,
+        "backadjustment.on": false
+    },
+    "barmerge": {
+        "barmerge.gaps_off": false,
+        "barmerge.gaps_on": false,
+        "barmerge.lookahead_off": false,
+        "barmerge.lookahead_on": false
+    },
+    "currency": {
+        "currency.AED": true,
+        "currency.ARS": true,
+        "currency.AUD": true,
+        "currency.BDT": true,
+        "currency.BHD": true,
+        "currency.BRL": true,
+        "currency.BTC": true,
+        "currency.CAD": true,
+        "currency.CHF": true,
+        "currency.CLP": true,
+        "currency.CNY": true,
+        "currency.COP": true,
+        "currency.CZK": true,
+        "currency.DKK": true,
+        "currency.EGP": true,
+        "currency.ETH": true,
+        "currency.EUR": true,
+        "currency.GBP": true,
+        "currency.HKD": true,
+        "currency.HUF": true,
+        "currency.IDR": true,
+        "currency.ILS": true,
+        "currency.INR": true,
+        "currency.ISK": true,
+        "currency.JPY": true,
+        "currency.KES": true,
+        "currency.KRW": true,
+        "currency.KWD": true,
+        "currency.LKR": true,
+        "currency.MAD": true,
+        "currency.MXN": true,
+        "currency.MYR": true,
+        "currency.NGN": true,
+        "currency.NOK": true,
+        "currency.NONE": true,
+        "currency.NZD": true,
+        "currency.PEN": true,
+        "currency.PHP": true,
+        "currency.PKR": true,
+        "currency.PLN": true,
+        "currency.QAR": true,
+        "currency.RON": true,
+        "currency.RSD": true,
+        "currency.RUB": true,
+        "currency.SAR": true,
+        "currency.SEK": true,
+        "currency.SGD": true,
+        "currency.THB": true,
+        "currency.TND": true,
+        "currency.TRY": true,
+        "currency.TWD": true,
+        "currency.USD": true,
+        "currency.USDT": true,
+        "currency.VES": true,
+        "currency.VND": true,
+        "currency.ZAR": true
+    },
+    "dayofweek": {
+        "dayofweek.friday": true,
+        "dayofweek.monday": true,
+        "dayofweek.saturday": true,
+        "dayofweek.sunday": true,
+        "dayofweek.thursday": true,
+        "dayofweek.tuesday": true,
+        "dayofweek.wednesday": true
+    },
+    "display": {
+        "display.all": false,
+        "display.data_window": false,
+        "display.none": false,
+        "display.pane": false,
+        "display.pine_screener": false,
+        "display.price_scale": false,
+        "display.status_line": false
+    },
+    "extend": {
+        "extend.both": false,
+        "extend.left": false,
+        "extend.none": false,
+        "extend.right": false
+    },
+    "font": {
+        "font.family_default": false,
+        "font.family_monospace": false
+    },
+    "format": {
+        "format.inherit": false,
+        "format.mintick": false,
+        "format.percent": false,
+        "format.price": false,
+        "format.volume": false
+    },
+    "hline": {
+        "hline.style_dashed": false,
+        "hline.style_dotted": false,
+        "hline.style_solid": false
+    },
+    "location": {
+        "location.abovebar": false,
+        "location.absolute": false,
+        "location.belowbar": false,
+        "location.bottom": false,
+        "location.top": false
+    },
+    "order": {
+        "order.ascending": true,
+        "order.descending": true
+    },
+    "plot": {
+        "plot.linestyle_dashed": false,
+        "plot.linestyle_dotted": false,
+        "plot.linestyle_solid": false,
+        "plot.style_area": false,
+        "plot.style_areabr": false,
+        "plot.style_circles": false,
+        "plot.style_columns": false,
+        "plot.style_cross": false,
+        "plot.style_histogram": false,
+        "plot.style_line": false,
+        "plot.style_linebr": false,
+        "plot.style_stepline": false,
+        "plot.style_stepline_diamond": false,
+        "plot.style_steplinebr": false
+    },
+    "position": {
+        "position.bottom_center": false,
+        "position.bottom_left": false,
+        "position.bottom_right": false,
+        "position.middle_center": false,
+        "position.middle_left": false,
+        "position.middle_right": false,
+        "position.top_center": false,
+        "position.top_left": false,
+        "position.top_right": false
+    },
+    "scale": {
+        "scale.left": false,
+        "scale.none": false,
+        "scale.right": false
+    },
+    "settlement_as_close": {
+        "settlement_as_close.inherit": false,
+        "settlement_as_close.off": false,
+        "settlement_as_close.on": false
+    },
+    "shape": {
+        "shape.arrowdown": false,
+        "shape.arrowup": false,
+        "shape.circle": false,
+        "shape.cross": false,
+        "shape.diamond": false,
+        "shape.flag": false,
+        "shape.labeldown": false,
+        "shape.labelup": false,
+        "shape.square": false,
+        "shape.triangledown": false,
+        "shape.triangleup": false,
+        "shape.xcross": false
+    },
+    "size": {
+        "size.auto": false,
+        "size.huge": false,
+        "size.large": false,
+        "size.normal": false,
+        "size.small": false,
+        "size.tiny": false
+    },
+    "splits": {
+        "splits.denominator": false,
+        "splits.numerator": false
+    },
+    "text": {
+        "text.align_bottom": false,
+        "text.align_center": false,
+        "text.align_left": false,
+        "text.align_right": false,
+        "text.align_top": false,
+        "text.format_bold": false,
+        "text.format_italic": false,
+        "text.format_none": false,
+        "text.wrap_auto": false,
+        "text.wrap_none": false
+    },
+    "xloc": {
+        "xloc.bar_index": false,
+        "xloc.bar_time": false
+    },
+    "yloc": {
+        "yloc.abovebar": false,
+        "yloc.belowbar": false,
+        "yloc.price": false
+    }
 }

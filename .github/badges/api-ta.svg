@@ -1,19 +1,13 @@
-<svg width="110.8" height="20" viewBox="0 0 1108 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ta: 69/69 (100%)">
+<svg width="132.95999999999998" height="24" viewBox="0 0 1108 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ta: 69/69 (100%)">
   <title>ta: 69/69 (100%)</title>
-  <linearGradient id="JOszE" x2="0" y2="100%">
-    <stop offset="0" stop-opacity=".1" stop-color="#EEE"/>
-    <stop offset="1" stop-opacity=".1"/>
-  </linearGradient>
-  <mask id="mBzhb"><rect width="1108" height="200" rx="30" fill="#FFF"/></mask>
-  <g mask="url(#mBzhb)">
-    <rect width="209" height="200" fill="#555"/>
-    <rect width="899" height="200" fill="#3C1" x="209"/>
-    <rect width="1108" height="200" fill="url(#JOszE)"/>
+  <g>
+    <rect fill="#555" width="209" height="200"/>
+    <rect fill="#3C1" x="209" width="899" height="200"/>
   </g>
   <g aria-hidden="true" fill="#fff" text-anchor="start" font-family="Verdana,DejaVu Sans,sans-serif" font-size="110">
-    <text x="60" y="148" textLength="109" fill="#000" opacity="0.25">ta</text>
+    <text x="60" y="148" textLength="109" fill="#000" opacity="0.1">ta</text>
     <text x="50" y="138" textLength="109">ta</text>
-    <text x="264" y="148" textLength="799" fill="#000" opacity="0.25">69/69 (100%)</text>
+    <text x="264" y="148" textLength="799" fill="#000" opacity="0.1">69/69 (100%)</text>
     <text x="254" y="138" textLength="799">69/69 (100%)</text>
   </g>
   

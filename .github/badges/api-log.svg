@@ -1,20 +1,14 @@
-<svg width="88.5" height="20" viewBox="0 0 885 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="log: 0/3 (0%)">
-  <title>log: 0/3 (0%)</title>
-  <linearGradient id="ANRMP" x2="0" y2="100%">
-    <stop offset="0" stop-opacity=".1" stop-color="#EEE"/>
-    <stop offset="1" stop-opacity=".1"/>
-  </linearGradient>
-  <mask id="EpyWm"><rect width="885" height="200" rx="30" fill="#FFF"/></mask>
-  <g mask="url(#EpyWm)">
-    <rect width="266" height="200" fill="#555"/>
-    <rect width="619" height="200" fill="#E43" x="266"/>
-    <rect width="885" height="200" fill="url(#ANRMP)"/>
+<svg width="123" height="24" viewBox="0 0 1025 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="log: 3/3 (100%)">
+  <title>log: 3/3 (100%)</title>
+  <g>
+    <rect fill="#555" width="266" height="200"/>
+    <rect fill="#3C1" x="266" width="759" height="200"/>
   </g>
   <g aria-hidden="true" fill="#fff" text-anchor="start" font-family="Verdana,DejaVu Sans,sans-serif" font-size="110">
-    <text x="60" y="148" textLength="166" fill="#000" opacity="0.25">log</text>
+    <text x="60" y="148" textLength="166" fill="#000" opacity="0.1">log</text>
     <text x="50" y="138" textLength="166">log</text>
-    <text x="321" y="148" textLength="519" fill="#000" opacity="0.25">0/3 (0%)</text>
-    <text x="311" y="138" textLength="519">0/3 (0%)</text>
+    <text x="321" y="148" textLength="659" fill="#000" opacity="0.1">3/3 (100%)</text>
+    <text x="311" y="138" textLength="659">3/3 (100%)</text>
   </g>
   
 </svg>

@@ -1,19 +1,13 @@
-<svg width="115" height="20" viewBox="0 0 1150 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="matrix: 0/49 (0%)">
+<svg width="138" height="24" viewBox="0 0 1150 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="matrix: 0/49 (0%)">
   <title>matrix: 0/49 (0%)</title>
-  <linearGradient id="vBxYk" x2="0" y2="100%">
-    <stop offset="0" stop-opacity=".1" stop-color="#EEE"/>
-    <stop offset="1" stop-opacity=".1"/>
-  </linearGradient>
-  <mask id="uagPP"><rect width="1150" height="200" rx="30" fill="#FFF"/></mask>
-  <g mask="url(#uagPP)">
-    <rect width="461" height="200" fill="#555"/>
-    <rect width="689" height="200" fill="#E43" x="461"/>
-    <rect width="1150" height="200" fill="url(#vBxYk)"/>
+  <g>
+    <rect fill="#555" width="461" height="200"/>
+    <rect fill="#E43" x="461" width="689" height="200"/>
   </g>
   <g aria-hidden="true" fill="#fff" text-anchor="start" font-family="Verdana,DejaVu Sans,sans-serif" font-size="110">
-    <text x="60" y="148" textLength="361" fill="#000" opacity="0.25">matrix</text>
+    <text x="60" y="148" textLength="361" fill="#000" opacity="0.1">matrix</text>
     <text x="50" y="138" textLength="361">matrix</text>
-    <text x="516" y="148" textLength="589" fill="#000" opacity="0.25">0/49 (0%)</text>
+    <text x="516" y="148" textLength="589" fill="#000" opacity="0.1">0/49 (0%)</text>
     <text x="506" y="138" textLength="589">0/49 (0%)</text>
   </g>
   

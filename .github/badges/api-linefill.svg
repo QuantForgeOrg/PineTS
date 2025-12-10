@@ -1,19 +1,13 @@
-<svg width="104.4" height="20" viewBox="0 0 1044 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="linefill: 0/6 (0%)">
+<svg width="125.28" height="24" viewBox="0 0 1044 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="linefill: 0/6 (0%)">
   <title>linefill: 0/6 (0%)</title>
-  <linearGradient id="lioiM" x2="0" y2="100%">
-    <stop offset="0" stop-opacity=".1" stop-color="#EEE"/>
-    <stop offset="1" stop-opacity=".1"/>
-  </linearGradient>
-  <mask id="qQuyD"><rect width="1044" height="200" rx="30" fill="#FFF"/></mask>
-  <g mask="url(#qQuyD)">
-    <rect width="425" height="200" fill="#555"/>
-    <rect width="619" height="200" fill="#E43" x="425"/>
-    <rect width="1044" height="200" fill="url(#lioiM)"/>
+  <g>
+    <rect fill="#555" width="425" height="200"/>
+    <rect fill="#E43" x="425" width="619" height="200"/>
   </g>
   <g aria-hidden="true" fill="#fff" text-anchor="start" font-family="Verdana,DejaVu Sans,sans-serif" font-size="110">
-    <text x="60" y="148" textLength="325" fill="#000" opacity="0.25">linefill</text>
+    <text x="60" y="148" textLength="325" fill="#000" opacity="0.1">linefill</text>
     <text x="50" y="138" textLength="325">linefill</text>
-    <text x="480" y="148" textLength="519" fill="#000" opacity="0.25">0/6 (0%)</text>
+    <text x="480" y="148" textLength="519" fill="#000" opacity="0.1">0/6 (0%)</text>
     <text x="470" y="138" textLength="519">0/6 (0%)</text>
   </g>
   

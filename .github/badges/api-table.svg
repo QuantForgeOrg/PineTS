@@ -1,19 +1,13 @@
-<svg width="106.3" height="20" viewBox="0 0 1063 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="table: 0/23 (0%)">
+<svg width="127.55999999999999" height="24" viewBox="0 0 1063 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="table: 0/23 (0%)">
   <title>table: 0/23 (0%)</title>
-  <linearGradient id="XZHlN" x2="0" y2="100%">
-    <stop offset="0" stop-opacity=".1" stop-color="#EEE"/>
-    <stop offset="1" stop-opacity=".1"/>
-  </linearGradient>
-  <mask id="FiJYF"><rect width="1063" height="200" rx="30" fill="#FFF"/></mask>
-  <g mask="url(#FiJYF)">
-    <rect width="374" height="200" fill="#555"/>
-    <rect width="689" height="200" fill="#E43" x="374"/>
-    <rect width="1063" height="200" fill="url(#XZHlN)"/>
+  <g>
+    <rect fill="#555" width="374" height="200"/>
+    <rect fill="#E43" x="374" width="689" height="200"/>
   </g>
   <g aria-hidden="true" fill="#fff" text-anchor="start" font-family="Verdana,DejaVu Sans,sans-serif" font-size="110">
-    <text x="60" y="148" textLength="274" fill="#000" opacity="0.25">table</text>
+    <text x="60" y="148" textLength="274" fill="#000" opacity="0.1">table</text>
     <text x="50" y="138" textLength="274">table</text>
-    <text x="429" y="148" textLength="589" fill="#000" opacity="0.25">0/23 (0%)</text>
+    <text x="429" y="148" textLength="589" fill="#000" opacity="0.1">0/23 (0%)</text>
     <text x="419" y="138" textLength="589">0/23 (0%)</text>
   </g>
   

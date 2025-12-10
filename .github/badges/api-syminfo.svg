@@ -1,19 +1,13 @@
-<svg width="136.7" height="20" viewBox="0 0 1367 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="syminfo: 40/42 (95%)">
+<svg width="164.04" height="24" viewBox="0 0 1367 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="syminfo: 40/42 (95%)">
   <title>syminfo: 40/42 (95%)</title>
-  <linearGradient id="aRYOS" x2="0" y2="100%">
-    <stop offset="0" stop-opacity=".1" stop-color="#EEE"/>
-    <stop offset="1" stop-opacity=".1"/>
-  </linearGradient>
-  <mask id="upgxk"><rect width="1367" height="200" rx="30" fill="#FFF"/></mask>
-  <g mask="url(#upgxk)">
-    <rect width="538" height="200" fill="#555"/>
-    <rect width="829" height="200" fill="#3C1" x="538"/>
-    <rect width="1367" height="200" fill="url(#aRYOS)"/>
+  <g>
+    <rect fill="#555" width="538" height="200"/>
+    <rect fill="#3C1" x="538" width="829" height="200"/>
   </g>
   <g aria-hidden="true" fill="#fff" text-anchor="start" font-family="Verdana,DejaVu Sans,sans-serif" font-size="110">
-    <text x="60" y="148" textLength="438" fill="#000" opacity="0.25">syminfo</text>
+    <text x="60" y="148" textLength="438" fill="#000" opacity="0.1">syminfo</text>
     <text x="50" y="138" textLength="438">syminfo</text>
-    <text x="593" y="148" textLength="729" fill="#000" opacity="0.25">40/42 (95%)</text>
+    <text x="593" y="148" textLength="729" fill="#000" opacity="0.1">40/42 (95%)</text>
     <text x="583" y="138" textLength="729">40/42 (95%)</text>
   </g>
   

@@ -61,181 +61,269 @@ export enum PineArrayType {
 }
 
 export class PineArrayObject {
-    constructor(public array: any, public type: PineArrayType, public context: any) {}
+    private _abs: any;
+    private _avg: any;
+    private _binary_search: any;
+    private _binary_search_leftmost: any;
+    private _binary_search_rightmost: any;
+    private _clear: any;
+    private _concat: any;
+    private _copy: any;
+    private _covariance: any;
+    private _every: any;
+    private _fill: any;
+    private _first: any;
+    private _get: any;
+    private _includes: any;
+    private _indexof: any;
+    private _insert: any;
+    private _join: any;
+    private _last: any;
+    private _lastindexof: any;
+    private _max: any;
+    private _median: any;
+    private _min: any;
+    private _mode: any;
+    private _percentile_linear_interpolation: any;
+    private _percentile_nearest_rank: any;
+    private _percentrank: any;
+    private _pop: any;
+    private _push: any;
+    private _range: any;
+    private _remove: any;
+    private _reverse: any;
+    private _set: any;
+    private _shift: any;
+    private _size: any;
+    private _slice: any;
+    private _some: any;
+    private _sort: any;
+    private _sort_indices: any;
+    private _standardize: any;
+    private _stdev: any;
+    private _sum: any;
+    private _unshift: any;
+    private _variance: any;
+
+    constructor(public array: any, public type: PineArrayType, public context: any) {
+        this._abs = abs_factory(this.context);
+        this._avg = avg_factory(this.context);
+        this._binary_search = binary_search_factory(this.context);
+        this._binary_search_leftmost = binary_search_leftmost_factory(this.context);
+        this._binary_search_rightmost = binary_search_rightmost_factory(this.context);
+        this._clear = clear_factory(this.context);
+        this._concat = concat_factory(this.context);
+        this._copy = copy_factory(this.context);
+        this._covariance = covariance_factory(this.context);
+        this._every = every_factory(this.context);
+        this._fill = fill_factory(this.context);
+        this._first = first_factory(this.context);
+        this._get = get_factory(this.context);
+        this._includes = includes_factory(this.context);
+        this._indexof = indexof_factory(this.context);
+        this._insert = insert_factory(this.context);
+        this._join = join_factory(this.context);
+        this._last = last_factory(this.context);
+        this._lastindexof = lastindexof_factory(this.context);
+        this._max = max_factory(this.context);
+        this._median = median_factory(this.context);
+        this._min = min_factory(this.context);
+        this._mode = mode_factory(this.context);
+        this._percentile_linear_interpolation = percentile_linear_interpolation_factory(this.context);
+        this._percentile_nearest_rank = percentile_nearest_rank_factory(this.context);
+        this._percentrank = percentrank_factory(this.context);
+        this._pop = pop_factory(this.context);
+        this._push = push_factory(this.context);
+        this._range = range_factory(this.context);
+        this._remove = remove_factory(this.context);
+        this._reverse = reverse_factory(this.context);
+        this._set = set_factory(this.context);
+        this._shift = shift_factory(this.context);
+        this._size = size_factory(this.context);
+        this._slice = slice_factory(this.context);
+        this._some = some_factory(this.context);
+        this._sort = sort_factory(this.context);
+        this._sort_indices = sort_indices_factory(this.context);
+        this._standardize = standardize_factory(this.context);
+        this._stdev = stdev_factory(this.context);
+        this._sum = sum_factory(this.context);
+        this._unshift = unshift_factory(this.context);
+        this._variance = variance_factory(this.context);
+    }
 
     toString(): string {
         return 'PineArrayObject:' + this.array.toString();
     }
 
     abs(...args: any[]) {
-        return (abs_factory(this.context) as any)(this, ...args);
+        return this._abs(this, ...args);
     }
 
     avg(...args: any[]) {
-        return (avg_factory(this.context) as any)(this, ...args);
+        return this._avg(this, ...args);
     }
 
     binary_search(...args: any[]) {
-        return (binary_search_factory(this.context) as any)(this, ...args);
+        return this._binary_search(this, ...args);
     }
 
     binary_search_leftmost(...args: any[]) {
-        return (binary_search_leftmost_factory(this.context) as any)(this, ...args);
+        return this._binary_search_leftmost(this, ...args);
     }
 
     binary_search_rightmost(...args: any[]) {
-        return (binary_search_rightmost_factory(this.context) as any)(this, ...args);
+        return this._binary_search_rightmost(this, ...args);
     }
 
     clear(...args: any[]) {
-        return (clear_factory(this.context) as any)(this, ...args);
+        return this._clear(this, ...args);
     }
 
     concat(...args: any[]) {
-        return (concat_factory(this.context) as any)(this, ...args);
+        return this._concat(this, ...args);
     }
 
     copy(...args: any[]) {
-        return (copy_factory(this.context) as any)(this, ...args);
+        return this._copy(this, ...args);
     }
 
     covariance(...args: any[]) {
-        return (covariance_factory(this.context) as any)(this, ...args);
+        return this._covariance(this, ...args);
     }
 
     every(...args: any[]) {
-        return (every_factory(this.context) as any)(this, ...args);
+        return this._every(this, ...args);
     }
 
     fill(...args: any[]) {
-        return (fill_factory(this.context) as any)(this, ...args);
+        return this._fill(this, ...args);
     }
 
     first(...args: any[]) {
-        return (first_factory(this.context) as any)(this, ...args);
+        return this._first(this, ...args);
     }
 
     get(...args: any[]) {
-        return (get_factory(this.context) as any)(this, ...args);
+        return this._get(this, ...args);
     }
 
     includes(...args: any[]) {
-        return (includes_factory(this.context) as any)(this, ...args);
+        return this._includes(this, ...args);
     }
 
     indexof(...args: any[]) {
-        return (indexof_factory(this.context) as any)(this, ...args);
+        return this._indexof(this, ...args);
     }
 
     insert(...args: any[]) {
-        return (insert_factory(this.context) as any)(this, ...args);
+        return this._insert(this, ...args);
     }
 
     join(...args: any[]) {
-        return (join_factory(this.context) as any)(this, ...args);
+        return this._join(this, ...args);
     }
 
     last(...args: any[]) {
-        return (last_factory(this.context) as any)(this, ...args);
+        return this._last(this, ...args);
     }
 
     lastindexof(...args: any[]) {
-        return (lastindexof_factory(this.context) as any)(this, ...args);
+        return this._lastindexof(this, ...args);
     }
 
     max(...args: any[]) {
-        return (max_factory(this.context) as any)(this, ...args);
+        return this._max(this, ...args);
     }
 
     median(...args: any[]) {
-        return (median_factory(this.context) as any)(this, ...args);
+        return this._median(this, ...args);
     }
 
     min(...args: any[]) {
-        return (min_factory(this.context) as any)(this, ...args);
+        return this._min(this, ...args);
     }
 
     mode(...args: any[]) {
-        return (mode_factory(this.context) as any)(this, ...args);
+        return this._mode(this, ...args);
     }
 
     percentile_linear_interpolation(...args: any[]) {
-        return (percentile_linear_interpolation_factory(this.context) as any)(this, ...args);
+        return this._percentile_linear_interpolation(this, ...args);
     }
 
     percentile_nearest_rank(...args: any[]) {
-        return (percentile_nearest_rank_factory(this.context) as any)(this, ...args);
+        return this._percentile_nearest_rank(this, ...args);
     }
 
     percentrank(...args: any[]) {
-        return (percentrank_factory(this.context) as any)(this, ...args);
+        return this._percentrank(this, ...args);
     }
 
     pop(...args: any[]) {
-        return (pop_factory(this.context) as any)(this, ...args);
+        return this._pop(this, ...args);
     }
 
     push(...args: any[]) {
-        return (push_factory(this.context) as any)(this, ...args);
+        return this._push(this, ...args);
     }
 
     range(...args: any[]) {
-        return (range_factory(this.context) as any)(this, ...args);
+        return this._range(this, ...args);
     }
 
     remove(...args: any[]) {
-        return (remove_factory(this.context) as any)(this, ...args);
+        return this._remove(this, ...args);
     }
 
     reverse(...args: any[]) {
-        return (reverse_factory(this.context) as any)(this, ...args);
+        return this._reverse(this, ...args);
     }
 
     set(...args: any[]) {
-        return (set_factory(this.context) as any)(this, ...args);
+        return this._set(this, ...args);
     }
 
     shift(...args: any[]) {
-        return (shift_factory(this.context) as any)(this, ...args);
+        return this._shift(this, ...args);
     }
 
     size(...args: any[]) {
-        return (size_factory(this.context) as any)(this, ...args);
+        return this._size(this, ...args);
     }
 
     slice(...args: any[]) {
-        return (slice_factory(this.context) as any)(this, ...args);
+        return this._slice(this, ...args);
     }
 
     some(...args: any[]) {
-        return (some_factory(this.context) as any)(this, ...args);
+        return this._some(this, ...args);
     }
 
     sort(...args: any[]) {
-        return (sort_factory(this.context) as any)(this, ...args);
+        return this._sort(this, ...args);
     }
 
     sort_indices(...args: any[]) {
-        return (sort_indices_factory(this.context) as any)(this, ...args);
+        return this._sort_indices(this, ...args);
     }
 
     standardize(...args: any[]) {
-        return (standardize_factory(this.context) as any)(this, ...args);
+        return this._standardize(this, ...args);
     }
 
     stdev(...args: any[]) {
-        return (stdev_factory(this.context) as any)(this, ...args);
+        return this._stdev(this, ...args);
     }
 
     sum(...args: any[]) {
-        return (sum_factory(this.context) as any)(this, ...args);
+        return this._sum(this, ...args);
     }
 
     unshift(...args: any[]) {
-        return (unshift_factory(this.context) as any)(this, ...args);
+        return this._unshift(this, ...args);
     }
 
     variance(...args: any[]) {
-        return (variance_factory(this.context) as any)(this, ...args);
+        return this._variance(this, ...args);
     }
 }

@@ -3,6 +3,7 @@
 
 import * as walk from 'acorn-walk';
 import { ASTFactory, CONTEXT_NAME } from '../utils/ASTFactory';
+import { CONTEXT_DATA_VARS, CONTEXT_PINE_VARS } from '../settings';
 
 /**
  * Injects implicit imports for missing context variables (data and pine namespaces)
@@ -111,31 +112,9 @@ export function injectImplicitImports(ast: any): void {
     });
 
     // 3. Define implicit variables
-    const contextDataVars = ['open', 'high', 'low', 'close', 'volume', 'hl2', 'hlc3', 'ohlc4', 'openTime', 'closeTime'];
+    const contextDataVars = CONTEXT_DATA_VARS;
 
-    const contextPineVars = [
-        'input',
-        'ta',
-        'math',
-        'request',
-        'array',
-        'na',
-        'plotchar',
-        'color',
-        'plot',
-        'nz',
-        'strategy',
-        'library',
-        'str',
-        'box',
-        'line',
-        'label',
-        'table',
-        'map',
-        'matrix',
-        'syminfo',
-        'barstate',
-    ];
+    const contextPineVars = CONTEXT_PINE_VARS;
 
     // 4. Identify missing variables
     const missingDataVars = contextDataVars.filter((v) => !declaredVars.has(v));

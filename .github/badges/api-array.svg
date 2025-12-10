@@ -1,19 +1,13 @@
-<svg width="129" height="20" viewBox="0 0 1290 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="array: 55/55 (100%)">
+<svg width="154.8" height="24" viewBox="0 0 1290 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="array: 55/55 (100%)">
   <title>array: 55/55 (100%)</title>
-  <linearGradient id="UXpPp" x2="0" y2="100%">
-    <stop offset="0" stop-opacity=".1" stop-color="#EEE"/>
-    <stop offset="1" stop-opacity=".1"/>
-  </linearGradient>
-  <mask id="JPJKN"><rect width="1290" height="200" rx="30" fill="#FFF"/></mask>
-  <g mask="url(#JPJKN)">
-    <rect width="391" height="200" fill="#555"/>
-    <rect width="899" height="200" fill="#3C1" x="391"/>
-    <rect width="1290" height="200" fill="url(#UXpPp)"/>
+  <g>
+    <rect fill="#555" width="391" height="200"/>
+    <rect fill="#3C1" x="391" width="899" height="200"/>
   </g>
   <g aria-hidden="true" fill="#fff" text-anchor="start" font-family="Verdana,DejaVu Sans,sans-serif" font-size="110">
-    <text x="60" y="148" textLength="291" fill="#000" opacity="0.25">array</text>
+    <text x="60" y="148" textLength="291" fill="#000" opacity="0.1">array</text>
     <text x="50" y="138" textLength="291">array</text>
-    <text x="446" y="148" textLength="799" fill="#000" opacity="0.25">55/55 (100%)</text>
+    <text x="446" y="148" textLength="799" fill="#000" opacity="0.1">55/55 (100%)</text>
     <text x="436" y="138" textLength="799">55/55 (100%)</text>
   </g>
   

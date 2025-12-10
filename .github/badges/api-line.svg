@@ -1,19 +1,13 @@
-<svg width="98.5" height="20" viewBox="0 0 985 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="line: 0/28 (0%)">
+<svg width="118.2" height="24" viewBox="0 0 985 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="line: 0/28 (0%)">
   <title>line: 0/28 (0%)</title>
-  <linearGradient id="bIguh" x2="0" y2="100%">
-    <stop offset="0" stop-opacity=".1" stop-color="#EEE"/>
-    <stop offset="1" stop-opacity=".1"/>
-  </linearGradient>
-  <mask id="MKzOR"><rect width="985" height="200" rx="30" fill="#FFF"/></mask>
-  <g mask="url(#MKzOR)">
-    <rect width="296" height="200" fill="#555"/>
-    <rect width="689" height="200" fill="#E43" x="296"/>
-    <rect width="985" height="200" fill="url(#bIguh)"/>
+  <g>
+    <rect fill="#555" width="296" height="200"/>
+    <rect fill="#E43" x="296" width="689" height="200"/>
   </g>
   <g aria-hidden="true" fill="#fff" text-anchor="start" font-family="Verdana,DejaVu Sans,sans-serif" font-size="110">
-    <text x="60" y="148" textLength="196" fill="#000" opacity="0.25">line</text>
+    <text x="60" y="148" textLength="196" fill="#000" opacity="0.1">line</text>
     <text x="50" y="138" textLength="196">line</text>
-    <text x="351" y="148" textLength="589" fill="#000" opacity="0.25">0/28 (0%)</text>
+    <text x="351" y="148" textLength="589" fill="#000" opacity="0.1">0/28 (0%)</text>
     <text x="341" y="138" textLength="589">0/28 (0%)</text>
   </g>
   

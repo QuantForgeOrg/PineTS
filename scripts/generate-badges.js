@@ -60,49 +60,46 @@ function countImplemented(obj) {
  */
 function generateApiCoverageBadges() {
     const apiDir = 'docs/api-coverage/pinescript-v6';
-    
+
     if (!existsSync(apiDir)) {
         console.warn('API coverage directory not found. Skipping API badges.');
         return;
     }
 
-    const files = readdirSync(apiDir).filter(f => f.endsWith('.json'));
+    const files = readdirSync(apiDir).filter((f) => f.endsWith('.json'));
     let totalImplemented = 0;
     let totalCount = 0;
 
     console.log('\n📊 API Coverage by Namespace:');
     console.log('─'.repeat(50));
 
-    files.forEach(file => {
+    files.forEach((file) => {
         try {
             const namespace = path.basename(file, '.json');
             const filePath = path.join(apiDir, file);
             const data = JSON.parse(readFileSync(filePath, 'utf-8'));
-            
+
             const { implemented, total } = countImplemented(data);
             const percentage = total > 0 ? Math.round((implemented / total) * 100) : 0;
-            
+
             totalImplemented += implemented;
             totalCount += total;
 
             // Determine badge color
-            const color = percentage >= 80 ? 'green' 
-                        : percentage >= 50 ? 'blue'
-                        : percentage >= 30 ? 'yellow'
-                        : percentage > 0 ? 'orange'
-                        : 'red';
+            const color = percentage >= 80 ? 'green' : percentage >= 50 ? 'blue' : percentage >= 30 ? 'yellow' : percentage > 0 ? 'orange' : 'red';
 
             // Generate badge
             const svgString = badgen({
                 label: namespace,
                 status: `${implemented}/${total} (${percentage}%)`,
+                style: 'flat',
                 color: color,
-                scale: 1,
+                scale: 1.2,
             });
 
             const badgePath = path.join(badgesDir, `api-${namespace}.svg`);
             writeFileSync(badgePath, svgString);
-            
+
             console.log(`  ${namespace.padEnd(15)} ${implemented.toString().padStart(3)}/${total.toString().padEnd(3)} (${percentage}%)`);
         } catch (error) {
             console.error(`Error processing ${file}:`, error.message);
@@ -112,21 +109,19 @@ function generateApiCoverageBadges() {
     // Generate overall API coverage badge
     if (totalCount > 0) {
         const overallPercentage = Math.round((totalImplemented / totalCount) * 100);
-        const color = overallPercentage >= 80 ? 'green'
-                    : overallPercentage >= 50 ? 'blue'
-                    : overallPercentage >= 30 ? 'yellow'
-                    : 'orange';
+        const color = overallPercentage >= 80 ? 'green' : overallPercentage >= 50 ? 'blue' : overallPercentage >= 30 ? 'yellow' : 'orange';
 
         const svgString = badgen({
             label: 'API coverage',
             status: `${overallPercentage}%`,
+            style: 'flat',
             color: color,
             scale: 1,
         });
 
         const badgePath = path.join(badgesDir, 'api-coverage.svg');
         writeFileSync(badgePath, svgString);
-        
+
         console.log('─'.repeat(50));
         console.log(`  ${'TOTAL'.padEnd(15)} ${totalImplemented.toString().padStart(3)}/${totalCount.toString().padEnd(3)} (${overallPercentage}%)`);
         console.log('\n✓ Overall API coverage badge generated');
@@ -158,4 +153,3 @@ try {
     console.error('Fatal error:', error);
     process.exit(1);
 }
-

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 import { PineArrayObject } from '../PineArrayObject';
-import { order } from '../types';
+import { order } from '../../Types';
 export function sort(context: any) {
     return (id: PineArrayObject, _order: order = order.ascending): void => {
         id.array.sort((a: number, b: number) => {

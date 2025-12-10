@@ -1,20 +1,14 @@
-<svg width="115.9" height="20" viewBox="0 0 1159 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="types: 0/180 (0%)">
-  <title>types: 0/180 (0%)</title>
-  <linearGradient id="SQUPH" x2="0" y2="100%">
-    <stop offset="0" stop-opacity=".1" stop-color="#EEE"/>
-    <stop offset="1" stop-opacity=".1"/>
-  </linearGradient>
-  <mask id="qusiQ"><rect width="1159" height="200" rx="30" fill="#FFF"/></mask>
-  <g mask="url(#qusiQ)">
-    <rect width="400" height="200" fill="#555"/>
-    <rect width="759" height="200" fill="#E43" x="400"/>
-    <rect width="1159" height="200" fill="url(#SQUPH)"/>
+<svg width="155.88" height="24" viewBox="0 0 1299 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="types: 65/180 (36%)">
+  <title>types: 65/180 (36%)</title>
+  <g>
+    <rect fill="#555" width="400" height="200"/>
+    <rect fill="#DB1" x="400" width="899" height="200"/>
   </g>
   <g aria-hidden="true" fill="#fff" text-anchor="start" font-family="Verdana,DejaVu Sans,sans-serif" font-size="110">
-    <text x="60" y="148" textLength="300" fill="#000" opacity="0.25">types</text>
+    <text x="60" y="148" textLength="300" fill="#000" opacity="0.1">types</text>
     <text x="50" y="138" textLength="300">types</text>
-    <text x="455" y="148" textLength="659" fill="#000" opacity="0.25">0/180 (0%)</text>
-    <text x="445" y="138" textLength="659">0/180 (0%)</text>
+    <text x="455" y="148" textLength="799" fill="#000" opacity="0.1">65/180 (36%)</text>
+    <text x="445" y="138" textLength="799">65/180 (36%)</text>
   </g>
   
 </svg>

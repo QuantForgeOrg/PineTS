@@ -1,20 +1,14 @@
-<svg width="127.1" height="20" viewBox="0 0 1271 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="builtin: 17/71 (24%)">
-  <title>builtin: 17/71 (24%)</title>
-  <linearGradient id="PJhaj" x2="0" y2="100%">
-    <stop offset="0" stop-opacity=".1" stop-color="#EEE"/>
-    <stop offset="1" stop-opacity=".1"/>
-  </linearGradient>
-  <mask id="KLGSK"><rect width="1271" height="200" rx="30" fill="#FFF"/></mask>
-  <g mask="url(#KLGSK)">
-    <rect width="442" height="200" fill="#555"/>
-    <rect width="829" height="200" fill="#F73" x="442"/>
-    <rect width="1271" height="200" fill="url(#PJhaj)"/>
+<svg width="152.52" height="24" viewBox="0 0 1271 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="builtin: 21/71 (30%)">
+  <title>builtin: 21/71 (30%)</title>
+  <g>
+    <rect fill="#555" width="442" height="200"/>
+    <rect fill="#DB1" x="442" width="829" height="200"/>
   </g>
   <g aria-hidden="true" fill="#fff" text-anchor="start" font-family="Verdana,DejaVu Sans,sans-serif" font-size="110">
-    <text x="60" y="148" textLength="342" fill="#000" opacity="0.25">builtin</text>
+    <text x="60" y="148" textLength="342" fill="#000" opacity="0.1">builtin</text>
     <text x="50" y="138" textLength="342">builtin</text>
-    <text x="497" y="148" textLength="729" fill="#000" opacity="0.25">17/71 (24%)</text>
-    <text x="487" y="138" textLength="729">17/71 (24%)</text>
+    <text x="497" y="148" textLength="729" fill="#000" opacity="0.1">21/71 (30%)</text>
+    <text x="487" y="138" textLength="729">21/71 (30%)</text>
   </g>
   
 </svg>

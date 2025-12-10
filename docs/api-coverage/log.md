@@ -8,6 +8,6 @@ parent: API Coverage
 
 | Function        | Status |
 | --------------- | ------ |
-| `log.error()`   |        |
-| `log.info()`    |        |
-| `log.warning()` |        |
+| `log.error()`   | ✅     |
+| `log.info()`    | ✅     |
+| `log.warning()` | ✅     |

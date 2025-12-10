@@ -1,20 +1,14 @@
-<svg width="117.6" height="20" viewBox="0 0 1176 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="barstate: 0/7 (0%)">
-  <title>barstate: 0/7 (0%)</title>
-  <linearGradient id="jrfCa" x2="0" y2="100%">
-    <stop offset="0" stop-opacity=".1" stop-color="#EEE"/>
-    <stop offset="1" stop-opacity=".1"/>
-  </linearGradient>
-  <mask id="gQsao"><rect width="1176" height="200" rx="30" fill="#FFF"/></mask>
-  <g mask="url(#gQsao)">
-    <rect width="557" height="200" fill="#555"/>
-    <rect width="619" height="200" fill="#E43" x="557"/>
-    <rect width="1176" height="200" fill="url(#jrfCa)"/>
+<svg width="157.92000000000002" height="24" viewBox="0 0 1316 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="barstate: 7/7 (100%)">
+  <title>barstate: 7/7 (100%)</title>
+  <g>
+    <rect fill="#555" width="557" height="200"/>
+    <rect fill="#3C1" x="557" width="759" height="200"/>
   </g>
   <g aria-hidden="true" fill="#fff" text-anchor="start" font-family="Verdana,DejaVu Sans,sans-serif" font-size="110">
-    <text x="60" y="148" textLength="457" fill="#000" opacity="0.25">barstate</text>
+    <text x="60" y="148" textLength="457" fill="#000" opacity="0.1">barstate</text>
     <text x="50" y="138" textLength="457">barstate</text>
-    <text x="612" y="148" textLength="519" fill="#000" opacity="0.25">0/7 (0%)</text>
-    <text x="602" y="138" textLength="519">0/7 (0%)</text>
+    <text x="612" y="148" textLength="659" fill="#000" opacity="0.1">7/7 (100%)</text>
+    <text x="602" y="138" textLength="659">7/7 (100%)</text>
   </g>
   
 </svg>

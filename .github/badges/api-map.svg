@@ -1,20 +1,14 @@
-<svg width="103.4" height="20" viewBox="0 0 1034 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="map: 0/11 (0%)">
-  <title>map: 0/11 (0%)</title>
-  <linearGradient id="kkJkL" x2="0" y2="100%">
-    <stop offset="0" stop-opacity=".1" stop-color="#EEE"/>
-    <stop offset="1" stop-opacity=".1"/>
-  </linearGradient>
-  <mask id="aSaRW"><rect width="1034" height="200" rx="30" fill="#FFF"/></mask>
-  <g mask="url(#aSaRW)">
-    <rect width="345" height="200" fill="#555"/>
-    <rect width="689" height="200" fill="#E43" x="345"/>
-    <rect width="1034" height="200" fill="url(#kkJkL)"/>
+<svg width="149.28" height="24" viewBox="0 0 1244 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="map: 11/11 (100%)">
+  <title>map: 11/11 (100%)</title>
+  <g>
+    <rect fill="#555" width="345" height="200"/>
+    <rect fill="#3C1" x="345" width="899" height="200"/>
   </g>
   <g aria-hidden="true" fill="#fff" text-anchor="start" font-family="Verdana,DejaVu Sans,sans-serif" font-size="110">
-    <text x="60" y="148" textLength="245" fill="#000" opacity="0.25">map</text>
+    <text x="60" y="148" textLength="245" fill="#000" opacity="0.1">map</text>
     <text x="50" y="138" textLength="245">map</text>
-    <text x="400" y="148" textLength="589" fill="#000" opacity="0.25">0/11 (0%)</text>
-    <text x="390" y="138" textLength="589">0/11 (0%)</text>
+    <text x="400" y="148" textLength="799" fill="#000" opacity="0.1">11/11 (100%)</text>
+    <text x="390" y="138" textLength="799">11/11 (100%)</text>
   </g>
   
 </svg>

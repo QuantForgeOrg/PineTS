@@ -40,13 +40,33 @@ async function generateIndex() {
 
         const objectImports = objectMethods.map((m) => `import { ${m.export} as ${m.export}_factory } from './methods/${m.file}';`).join('\n');
 
+        const objectPrivateProps = objectMethods.map((m) => `    private _${m.classProp}: any;`).join('\n');
+
+        const objectInitProps = objectMethods
+            .map((m) => `        this._${m.classProp} = ${m.export}_factory(this.context);`)
+            .join('\n');
+
         const objectMethodDefs = objectMethods
             .map((m) => {
                 return `    ${m.classProp}(...args: any[]) {
-        return (${m.export}_factory(this.context) as any)(this, ...args);
+        return this._${m.classProp}(this, ...args);
     }`;
             })
             .join('\n\n');
+
+        const pineArrayTypeEnum = `export enum PineArrayType {
+    any = '',
+    box = 'box',
+    bool = 'bool',
+    color = 'color',
+    float = 'float',
+    int = 'int',
+    label = 'label',
+    line = 'line',
+    linefill = 'linefill',
+    string = 'string',
+    table = 'table',
+}`;
 
         const objectClassCode = `// SPDX-License-Identifier: AGPL-3.0-only
 // This file is auto-generated. Do not edit manually.
@@ -54,8 +74,14 @@ async function generateIndex() {
 
 ${objectImports}
 
+${pineArrayTypeEnum}
+
 export class PineArrayObject {
-    constructor(public array: any, public context: any) {}
+${objectPrivateProps}
+
+    constructor(public array: any, public type: PineArrayType, public context: any) {
+${objectInitProps}
+    }
 
     toString(): string {
         return 'PineArrayObject:' + this.array.toString();
@@ -73,7 +99,7 @@ ${objectMethodDefs}
         const getterImports = getters.length > 0 ? getters.map((name) => `import { ${name} } from './getters/${name}';`).join('\n') : '';
 
         // Imports for index file
-        let indexImports = `import { PineArrayObject } from './PineArrayObject';`;
+        let indexImports = `export { PineArrayObject } from './PineArrayObject';\n\nimport { PineArrayObject } from './PineArrayObject';`;
 
         // Import static method factories
         const staticMethodImports = methods
@@ -84,8 +110,6 @@ ${objectMethodDefs}
         indexImports += '\n' + staticMethodImports;
 
         // Generate getters object (for type definitions mostly, or we just inline)
-        // In the previous version, getters were added via Object.defineProperty
-
         const getterInstall =
             getters.length > 0
                 ? `    // Install getters
@@ -110,35 +134,12 @@ ${getters.map((g) => `      ${g}: ${g}`).join(',\n')}
             })
             .join('\n');
 
-        // Generate type declarations
-        // For 'new', we can use the return type of new_fn factory result.
-        // For others, it's hard to get exact types without importing all factories.
-        // We'll define them as any for now or try to be smart.
-        // To allow 'any' implicit types, we might need to be careful.
-        // But wait, if we don't declare them, TS might complain about missing properties if strict.
-        // The previous version declared them.
-        // Let's declare 'new' properly and others as Function or any for now to avoid import hell,
-        // OR we import them just for types.
-        // But the goal was to simplify array.index.ts.
-        // Let's rely on the dynamic nature (no explicit type decls for methods other than new?)
-        // The previous file had explicit type decls.
-        // "readonly name: ReturnType<ReturnType<typeof getters.name>>;"
-        // "name: ReturnType<typeof methods.name>;"
-
-        // If we want to keep types, we need to import the factories.
-        // But we are changing implementation to delegation.
-        // delegating `(id, ...args) => id.method(...args)` has the same signature as the factory result roughly.
-
-        // Let's stick to a simpler version first.
-
         const classCode = `// SPDX-License-Identifier: AGPL-3.0-only
 // This file is auto-generated. Do not edit manually.
 // Run: npm run generate:array-index
 
-export { PineArrayObject } from './PineArrayObject';
-${getterImports ? getterImports + '\n' : ''}
 ${indexImports}
-
+${getterImports ? getterImports + '\n' : ''}
 export class PineArray {
   [key: string]: any;
 

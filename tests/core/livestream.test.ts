@@ -7,9 +7,11 @@ describe('Pagination', () => {
         const pineTS = new PineTS(Provider.Binance, 'BTCUSDC', 'D', 100);
         const indicator = (context: any) => {
             const { close } = context.data;
-            const { ta, math, barstate } = context.pine;
+            const { ta, math, barstate, last_bar_time } = context.pine;
             const sma = ta.sma(close, 14);
             let state = barstate.isnew;
+            let spl = str.split('a,b,c', ',');
+            log.info(str.tostring(last_bar_time));
 
             const sum10 = math.sum(close, 10);
             return { sma, sum10, close, state };
@@ -78,7 +80,7 @@ describe('Pagination', () => {
             }
         }
         //expect pages to be greater than 0
-        expect(pageCount).toEqual(1);
+        expect(pageCount).toEqual(9);
 
         //expect iterations to be equal to 5
         expect(iterations.close.length).toBe(5);

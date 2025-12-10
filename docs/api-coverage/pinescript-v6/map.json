@@ -1,15 +1,15 @@
 {
-  "Other": {
-    "map.clear()": false,
-    "map.contains()": false,
-    "map.copy()": false,
-    "map.get()": false,
-    "map.keys()": false,
-    "map.new<type,type>()": false,
-    "map.put()": false,
-    "map.put_all()": false,
-    "map.remove()": false,
-    "map.size()": false,
-    "map.values()": false
-  }
+    "All": {
+        "map.clear()": true,
+        "map.contains()": true,
+        "map.copy()": true,
+        "map.get()": true,
+        "map.keys()": true,
+        "map.new<type,type>()": true,
+        "map.put()": true,
+        "map.put_all()": true,
+        "map.remove()": true,
+        "map.size()": true,
+        "map.values()": true
+    }
 }

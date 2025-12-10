@@ -1,30 +1,30 @@
 {
-  "Query": {
-    "str.contains()": false,
-    "str.endswith()": false,
-    "str.length()": false,
-    "str.match()": false,
-    "str.pos()": false,
-    "str.startswith()": false
-  },
-  "Formatting": {
-    "str.format()": false,
-    "str.format_time()": false
-  },
-  "Transformation": {
-    "str.lower()": false,
-    "str.repeat()": false,
-    "str.replace()": false,
-    "str.replace_all()": false,
-    "str.trim()": false,
-    "str.upper()": false
-  },
-  "Parsing": {
-    "str.split()": false,
-    "str.substring()": false
-  },
-  "Conversion": {
-    "str.tonumber()": false,
-    "str.tostring()": false
-  }
+    "Query": {
+        "str.contains()": true,
+        "str.endswith()": true,
+        "str.length()": true,
+        "str.match()": true,
+        "str.pos()": true,
+        "str.startswith()": true
+    },
+    "Formatting": {
+        "str.format()": true,
+        "str.format_time()": false
+    },
+    "Transformation": {
+        "str.lower()": true,
+        "str.repeat()": true,
+        "str.replace()": true,
+        "str.replace_all()": true,
+        "str.trim()": true,
+        "str.upper()": true
+    },
+    "Parsing": {
+        "str.split()": false,
+        "str.substring()": false
+    },
+    "Conversion": {
+        "str.tonumber()": true,
+        "str.tostring()": true
+    }
 }

@@ -27,11 +27,24 @@ export class Core {
         green: 'green',
         red: 'red',
         maroon: 'maroon',
-
         black: 'black',
-
         gray: 'gray',
         blue: 'blue',
+        yellow: 'yellow',
+        orange: 'orange',
+        purple: 'purple',
+        pink: 'pink',
+        brown: 'brown',
+        teal: 'teal',
+        cyan: 'cyan',
+        navy: 'navy',
+        indigo: 'indigo',
+        violet: 'violet',
+        magenta: 'magenta',
+        rose: 'rose',
+        gold: 'gold',
+        silver: 'silver',
+        bronze: 'bronze',
     };
     constructor(private context: any) {}
     private extractPlotOptions(options: PlotCharOptions) {
